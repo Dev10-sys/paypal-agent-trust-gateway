@@ -1,0 +1,1159 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 60;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		04DDF4622EE8AA1900FBDE49 /* PaymentButtonHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DDF4612EE8AA1200FBDE49 /* PaymentButtonHelper.swift */; };
+		08222B07C311489F90D08D41 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D23244B5E9EE59BAB3F3003 /* Pods_Demo.framework */; };
+		0827D165300131C100D26DC4 /* SEPADirectDebitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0827D164300131C100D26DC4 /* SEPADirectDebitView.swift */; };
+		0827D1673013AEDB00D26DC4 /* ApplePayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0827D1663013AEDB00D26DC4 /* ApplePayView.swift */; };
+		084C2C6E2FD85A960018BB01 /* CardFields_UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C2C6D2FD85A960018BB01 /* CardFields_UITests.swift */; };
+		086561662EF1D4EF00B16439 /* BraintreeUIComponents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08A83F5A2EDF965E0076BD28 /* BraintreeUIComponents.framework */; };
+		086561672EF1D4EF00B16439 /* BraintreeUIComponents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08A83F5A2EDF965E0076BD28 /* BraintreeUIComponents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		08A83F592EDE268E0076BD28 /* UIComponentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A83F582EDE268E0076BD28 /* UIComponentsViewController.swift */; };
+		08A83F6A2EE9AB5A0076BD28 /* VenmoButton_UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A83F692EE9AB5A0076BD28 /* VenmoButton_UITests.swift */; };
+		08A83F6C2EE9CC730076BD28 /* PayPalButton_UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A83F6B2EE9CC730076BD28 /* PayPalButton_UITests.swift */; };
+		42456E3E25474B620018374E /* BTUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42456E3C25474B620018374E /* BTUITest.swift */; };
+		42456E3F25474B620018374E /* DateGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42456E3D25474B620018374E /* DateGenerator.swift */; };
+		42C574AE25FA66F9008B3681 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C574AD25FA66F9008B3681 /* AppDelegate.swift */; };
+		42C574B025FA66F9008B3681 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C574AF25FA66F9008B3681 /* SceneDelegate.swift */; };
+		42C574B225FA66F9008B3681 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C574B125FA66F9008B3681 /* ViewController.swift */; };
+		42C574B525FA66F9008B3681 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42C574B325FA66F9008B3681 /* Main.storyboard */; };
+		42C574B725FA66FB008B3681 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42C574B625FA66FB008B3681 /* Assets.xcassets */; };
+		42C574BA25FA66FB008B3681 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42C574B825FA66FB008B3681 /* LaunchScreen.storyboard */; };
+		42C574D525FA6CAC008B3681 /* AppSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C574D425FA6CAC008B3681 /* AppSwitcher.swift */; };
+		45DDDDA92C08FB0B00C262E5 /* PayPalMessages in Frameworks */ = {isa = PBXBuildFile; productRef = 45DDDDA82C08FB0B00C262E5 /* PayPalMessages */; };
+		62070627300A8EE100C430AA /* IdealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62070626300A8ED500C430AA /* IdealView.swift */; };
+		62240F5A2B67FE1100ECE5C9 /* TextFieldWithLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62240F592B67FE1100ECE5C9 /* TextFieldWithLabel.swift */; };
+		625257C7301935CD00B69488 /* CardFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 625257C6301935C800B69488 /* CardFormView.swift */; };
+		62DD4F483013E8BA002D79E7 /* CardTokenizationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DD4F473013E8B4002D79E7 /* CardTokenizationView.swift */; };
+		62F1F560304B5E9400C180C2 /* AmexView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F1F55F304B5E9400C180C2 /* AmexView.swift */; };
+		8025988D2CC1A95400E7D898 /* Toggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8025988C2CC1A95400E7D898 /* Toggle.swift */; };
+		8028B9762B28C9E100C88CE8 /* ShopperInsightsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8028B9752B28C9E100C88CE8 /* ShopperInsightsViewController.swift */; };
+		8028B9782B28D42400C88CE8 /* BraintreeShopperInsights.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8028B9772B28D42400C88CE8 /* BraintreeShopperInsights.framework */; };
+		8028B9792B28D42400C88CE8 /* BraintreeShopperInsights.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8028B9772B28D42400C88CE8 /* BraintreeShopperInsights.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		803D64F5256DAF9A00ACE692 /* BraintreeAmericanExpress.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803D64EA256DAF9A00ACE692 /* BraintreeAmericanExpress.framework */; };
+		803D64F6256DAF9A00ACE692 /* BraintreeAmericanExpress.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 803D64EA256DAF9A00ACE692 /* BraintreeAmericanExpress.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		803D64F7256DAF9A00ACE692 /* BraintreeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803D64EB256DAF9A00ACE692 /* BraintreeApplePay.framework */; };
+		803D64F8256DAF9A00ACE692 /* BraintreeApplePay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 803D64EB256DAF9A00ACE692 /* BraintreeApplePay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		803D64F9256DAF9A00ACE692 /* BraintreeCard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803D64EC256DAF9A00ACE692 /* BraintreeCard.framework */; };
+		803D64FA256DAF9A00ACE692 /* BraintreeCard.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 803D64EC256DAF9A00ACE692 /* BraintreeCard.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		803D64FB256DAF9A00ACE692 /* BraintreeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803D64ED256DAF9A00ACE692 /* BraintreeCore.framework */; };
+		803D64FC256DAF9A00ACE692 /* BraintreeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 803D64ED256DAF9A00ACE692 /* BraintreeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		803D64FD256DAF9A00ACE692 /* BraintreeDataCollector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803D64EE256DAF9A00ACE692 /* BraintreeDataCollector.framework */; };
+		803D64FE256DAF9A00ACE692 /* BraintreeDataCollector.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 803D64EE256DAF9A00ACE692 /* BraintreeDataCollector.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		803D6501256DAF9A00ACE692 /* BraintreePayPal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803D64F0256DAF9A00ACE692 /* BraintreePayPal.framework */; };
+		803D6502256DAF9A00ACE692 /* BraintreePayPal.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 803D64F0256DAF9A00ACE692 /* BraintreePayPal.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		803D6503256DAF9A00ACE692 /* BraintreeThreeDSecure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803D64F1256DAF9A00ACE692 /* BraintreeThreeDSecure.framework */; };
+		803D6504256DAF9A00ACE692 /* BraintreeThreeDSecure.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 803D64F1256DAF9A00ACE692 /* BraintreeThreeDSecure.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		803D6507256DAF9A00ACE692 /* BraintreeVenmo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803D64F3256DAF9A00ACE692 /* BraintreeVenmo.framework */; };
+		803D6508256DAF9A00ACE692 /* BraintreeVenmo.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 803D64F3256DAF9A00ACE692 /* BraintreeVenmo.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		803FB9DE26D93146002BF92D /* BTCardFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 803FB9DD26D93146002BF92D /* BTCardFormView.swift */; };
+		80581A5F2553170000006F53 /* Venmo_UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80581A5D2553152A00006F53 /* Venmo_UITests.swift */; };
+		809E86A62AD00AF4004998B0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809E86A52AD00AF4004998B0 /* AppDelegate.swift */; };
+		809E86A82AD01FE7004998B0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809E86A72AD01FE7004998B0 /* SceneDelegate.swift */; };
+		80D36DEE2A7967F20035380E /* VenmoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D36DED2A7967F20035380E /* VenmoViewController.swift */; };
+		91E24EA930E1F3EFF3329A16 /* UIViewController+Embed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B20BE362F706797A0A110B0 /* UIViewController+Embed.swift */; };
+		9C36BD4C26B311D900F0A559 /* CardinalMobile.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C36BD4826B3102B00F0A559 /* CardinalMobile.xcframework */; };
+		9C36BD4D26B311D900F0A559 /* CardinalMobile.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9C36BD4826B3102B00F0A559 /* CardinalMobile.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A0988F9224DB44B20095EEEE /* BraintreeDemoSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0988E7E24DB44B10095EEEE /* BraintreeDemoSettings.swift */; };
+		A0988F9324DB44B20095EEEE /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A0988E7F24DB44B10095EEEE /* Settings.bundle */; };
+		A0988F9824DB44B20095EEEE /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A0988E8824DB44B10095EEEE /* Launch Screen.storyboard */; };
+		A0988FF924DB44B20095EEEE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A0988F8D24DB44B10095EEEE /* Images.xcassets */; };
+		A0988FFA24DB44B20095EEEE /* BraintreeDemoMerchantAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0988F9024DB44B20095EEEE /* BraintreeDemoMerchantAPIClient.swift */; };
+		A9C4E07924EC28F7002F6FF2 /* PayPal_Checkout_UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C4E07824EC28F7002F6FF2 /* PayPal_Checkout_UITests.swift */; };
+		A9C4E07B24EC290F002F6FF2 /* PayPal_Vault_UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C4E07A24EC290F002F6FF2 /* PayPal_Vault_UITests.swift */; };
+		A9C4E07D24EC297F002F6FF2 /* ThreeDSecure_V2_UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C4E07C24EC297F002F6FF2 /* ThreeDSecure_V2_UITests.swift */; };
+		A9C4E07F24EC2A0C002F6FF2 /* ThreeDSecure_UITests_Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C4E07E24EC2A0C002F6FF2 /* ThreeDSecure_UITests_Extensions.swift */; };
+		B88F9CCE2E2196530014BCB7 /* ShopperInsightsViewControllerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88F9CCD2E2196530014BCB7 /* ShopperInsightsViewControllerV2.swift */; };
+		BE35FCD82A1BD162008F0326 /* BraintreeLocalPayment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE35FCD72A1BD162008F0326 /* BraintreeLocalPayment.framework */; };
+		BE35FCD92A1BD162008F0326 /* BraintreeLocalPayment.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BE35FCD72A1BD162008F0326 /* BraintreeLocalPayment.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BE45D7162AD97C340047E2C7 /* ContainmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE45D7152AD97C340047E2C7 /* ContainmentViewController.swift */; };
+		BE500C7D303F25ED00A5FB81 /* PayPalRisk in Frameworks */ = {isa = PBXBuildFile; productRef = BE500C7C303F25ED00A5FB81 /* PayPalRisk */; };
+		BE67CDC02B29FF7B00BA4904 /* PayPalMessagingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE67CDBF2B29FF7B00BA4904 /* PayPalMessagingViewController.swift */; };
+		BE67CDC22B2A023F00BA4904 /* BraintreePayPalMessaging.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE67CDC12B2A023F00BA4904 /* BraintreePayPalMessaging.framework */; };
+		BE67CDC32B2A023F00BA4904 /* BraintreePayPalMessaging.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BE67CDC12B2A023F00BA4904 /* BraintreePayPalMessaging.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BE777AC427D9370400487D23 /* SEPADirectDebitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE777AC327D9370400487D23 /* SEPADirectDebitViewController.swift */; };
+		BE994B0B2AD8377D00470773 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE994B0A2AD8377D00470773 /* BaseViewController.swift */; };
+		BE994B0D2AD838A500470773 /* PaymentButtonBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE994B0C2AD838A500470773 /* PaymentButtonBaseViewController.swift */; };
+		BE9BD75928872E4D00022983 /* BraintreeSEPADirectDebit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE9BD75828872E4D00022983 /* BraintreeSEPADirectDebit.framework */; };
+		BE9BD75A28872E4D00022983 /* BraintreeSEPADirectDebit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BE9BD75828872E4D00022983 /* BraintreeSEPADirectDebit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BEAAAA342A98E5E6001ECA63 /* IdealViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAAAA332A98E5E6001ECA63 /* IdealViewController.swift */; };
+		BEAAAD052970A70D000BD296 /* BTSEPADirectDebitTestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAAAD042970A70D000BD296 /* BTSEPADirectDebitTestHelper.swift */; };
+		BEBD52832AAB62FB005D6687 /* ApplePayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEBD52822AAB62FB005D6687 /* ApplePayViewController.swift */; };
+		BEBD52852AAB9649005D6687 /* AmexViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEBD52842AAB9649005D6687 /* AmexViewController.swift */; };
+		BEBD52872AABA513005D6687 /* ThreeDSecureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEBD52862AABA513005D6687 /* ThreeDSecureViewController.swift */; };
+		BED461832AD072D9001B0DDF /* CardHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BED461822AD072D9001B0DDF /* CardHelpers.swift */; };
+		BED7C4CA2ABDD35700EF8550 /* PayPalWebCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BED7C4C92ABDD35700EF8550 /* PayPalWebCheckoutViewController.swift */; };
+		BEE930492A98FE9200C85779 /* DataCollectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE930482A98FE9200C85779 /* DataCollectorViewController.swift */; };
+		BEE9304B2A992F6200C85779 /* CardTokenizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE9304A2A992F6200C85779 /* CardTokenizationViewController.swift */; };
+		BEF137E52B3381CD00B9B225 /* PayPalMessaging_UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEF137E42B3381CD00B9B225 /* PayPalMessaging_UITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		42C574C125FA673B008B3681 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A0988E4124DB43DC0095EEEE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 42C574AA25FA66F9008B3681;
+			remoteInfo = MockVenmo;
+		};
+		A9B5ABE324EB2A2200A4E1C8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A0988E4124DB43DC0095EEEE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A0988E4824DB43DC0095EEEE;
+			remoteInfo = Demo;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A098902024DB44D60095EEEE /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				803D64F6256DAF9A00ACE692 /* BraintreeAmericanExpress.framework in Embed Frameworks */,
+				8028B9792B28D42400C88CE8 /* BraintreeShopperInsights.framework in Embed Frameworks */,
+				9C36BD4D26B311D900F0A559 /* CardinalMobile.xcframework in Embed Frameworks */,
+				086561672EF1D4EF00B16439 /* BraintreeUIComponents.framework in Embed Frameworks */,
+				803D6508256DAF9A00ACE692 /* BraintreeVenmo.framework in Embed Frameworks */,
+				803D64FA256DAF9A00ACE692 /* BraintreeCard.framework in Embed Frameworks */,
+				803D64FE256DAF9A00ACE692 /* BraintreeDataCollector.framework in Embed Frameworks */,
+				BE9BD75A28872E4D00022983 /* BraintreeSEPADirectDebit.framework in Embed Frameworks */,
+				803D64FC256DAF9A00ACE692 /* BraintreeCore.framework in Embed Frameworks */,
+				BE67CDC32B2A023F00BA4904 /* BraintreePayPalMessaging.framework in Embed Frameworks */,
+				BE35FCD92A1BD162008F0326 /* BraintreeLocalPayment.framework in Embed Frameworks */,
+				803D6504256DAF9A00ACE692 /* BraintreeThreeDSecure.framework in Embed Frameworks */,
+				803D6502256DAF9A00ACE692 /* BraintreePayPal.framework in Embed Frameworks */,
+				803D64F8256DAF9A00ACE692 /* BraintreeApplePay.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		04DDF4612EE8AA1200FBDE49 /* PaymentButtonHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentButtonHelper.swift; sourceTree = "<group>"; };
+		0827D164300131C100D26DC4 /* SEPADirectDebitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SEPADirectDebitView.swift; sourceTree = "<group>"; };
+		0827D1663013AEDB00D26DC4 /* ApplePayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplePayView.swift; sourceTree = "<group>"; };
+		084C2C6D2FD85A960018BB01 /* CardFields_UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardFields_UITests.swift; sourceTree = "<group>"; };
+		08A83F582EDE268E0076BD28 /* UIComponentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIComponentsViewController.swift; sourceTree = "<group>"; };
+		08A83F5A2EDF965E0076BD28 /* BraintreeUIComponents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BraintreeUIComponents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		08A83F692EE9AB5A0076BD28 /* VenmoButton_UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenmoButton_UITests.swift; sourceTree = "<group>"; };
+		08A83F6B2EE9CC730076BD28 /* PayPalButton_UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayPalButton_UITests.swift; sourceTree = "<group>"; };
+		42456E3C25474B620018374E /* BTUITest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BTUITest.swift; sourceTree = "<group>"; };
+		42456E3D25474B620018374E /* DateGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateGenerator.swift; sourceTree = "<group>"; };
+		42C574AB25FA66F9008B3681 /* MockVenmo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MockVenmo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		42C574AD25FA66F9008B3681 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		42C574AF25FA66F9008B3681 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		42C574B125FA66F9008B3681 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		42C574B425FA66F9008B3681 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		42C574B625FA66FB008B3681 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		42C574B925FA66FB008B3681 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		42C574BB25FA66FB008B3681 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		42C574D425FA6CAC008B3681 /* AppSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSwitcher.swift; sourceTree = "<group>"; };
+		42F3F6DB2603B83100401B0D /* CardinalMobile.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = CardinalMobile.xcframework; path = ../Frameworks/CardinalMobile.xcframework; sourceTree = "<group>"; };
+		570B93D32853A6D30041BAFE /* BraintreeCoreSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BraintreeCoreSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		62070626300A8ED500C430AA /* IdealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdealView.swift; sourceTree = "<group>"; };
+		62240F592B67FE1100ECE5C9 /* TextFieldWithLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldWithLabel.swift; sourceTree = "<group>"; };
+		625257C6301935C800B69488 /* CardFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardFormView.swift; sourceTree = "<group>"; };
+		62DD4F473013E8B4002D79E7 /* CardTokenizationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardTokenizationView.swift; sourceTree = "<group>"; };
+		62F1F55F304B5E9400C180C2 /* AmexView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmexView.swift; sourceTree = "<group>"; };
+		6D23244B5E9EE59BAB3F3003 /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		73498B4265CA7D315E2FBF38 /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
+		7B20BE362F706797A0A110B0 /* UIViewController+Embed.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIViewController+Embed.swift"; sourceTree = "<group>"; };
+		8025988C2CC1A95400E7D898 /* Toggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toggle.swift; sourceTree = "<group>"; };
+		8028B9752B28C9E100C88CE8 /* ShopperInsightsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShopperInsightsViewController.swift; sourceTree = "<group>"; };
+		8028B9772B28D42400C88CE8 /* BraintreeShopperInsights.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BraintreeShopperInsights.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		803D64EA256DAF9A00ACE692 /* BraintreeAmericanExpress.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BraintreeAmericanExpress.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		803D64EB256DAF9A00ACE692 /* BraintreeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BraintreeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		803D64EC256DAF9A00ACE692 /* BraintreeCard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BraintreeCard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		803D64ED256DAF9A00ACE692 /* BraintreeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BraintreeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		803D64EE256DAF9A00ACE692 /* BraintreeDataCollector.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BraintreeDataCollector.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		803D64EF256DAF9A00ACE692 /* BraintreePaymentFlow.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BraintreePaymentFlow.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		803D64F0256DAF9A00ACE692 /* BraintreePayPal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BraintreePayPal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		803D64F1256DAF9A00ACE692 /* BraintreeThreeDSecure.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BraintreeThreeDSecure.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		803D64F3256DAF9A00ACE692 /* BraintreeVenmo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BraintreeVenmo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		803FB9DD26D93146002BF92D /* BTCardFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTCardFormView.swift; sourceTree = "<group>"; };
+		80581A5D2553152A00006F53 /* Venmo_UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Venmo_UITests.swift; sourceTree = "<group>"; };
+		809E86A52AD00AF4004998B0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		809E86A72AD01FE7004998B0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		80D36DED2A7967F20035380E /* VenmoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenmoViewController.swift; sourceTree = "<group>"; };
+		9C030582267BDF9E00DB7A68 /* Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Demo.entitlements; sourceTree = "<group>"; };
+		9C36BD4826B3102B00F0A559 /* CardinalMobile.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:H7M4G5NDNU:CardinalCommerce Corp"; lastKnownFileType = wrapper.xcframework; name = CardinalMobile.xcframework; path = ../Frameworks/XCFrameworks/CardinalMobile.xcframework; sourceTree = "<group>"; };
+		A0988E4924DB43DC0095EEEE /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A0988E7E24DB44B10095EEEE /* BraintreeDemoSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BraintreeDemoSettings.swift; sourceTree = "<group>"; };
+		A0988E7F24DB44B10095EEEE /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		A0988E8824DB44B10095EEEE /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		A0988F5724DB44B10095EEEE /* Braintree-Demo-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Braintree-Demo-Info.plist"; sourceTree = "<group>"; };
+		A0988F8D24DB44B10095EEEE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		A0988F8E24DB44B10095EEEE /* Braintree-Demo.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = "Braintree-Demo.entitlements"; sourceTree = "<group>"; };
+		A0988F9024DB44B20095EEEE /* BraintreeDemoMerchantAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BraintreeDemoMerchantAPIClient.swift; sourceTree = "<group>"; };
+		A9B5ABDE24EB2A2200A4E1C8 /* UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A9B5ABE224EB2A2200A4E1C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A9C4E07824EC28F7002F6FF2 /* PayPal_Checkout_UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayPal_Checkout_UITests.swift; sourceTree = "<group>"; };
+		A9C4E07A24EC290F002F6FF2 /* PayPal_Vault_UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayPal_Vault_UITests.swift; sourceTree = "<group>"; };
+		A9C4E07C24EC297F002F6FF2 /* ThreeDSecure_V2_UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeDSecure_V2_UITests.swift; sourceTree = "<group>"; };
+		A9C4E07E24EC2A0C002F6FF2 /* ThreeDSecure_UITests_Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeDSecure_UITests_Extensions.swift; sourceTree = "<group>"; };
+		B88F9CCD2E2196530014BCB7 /* ShopperInsightsViewControllerV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopperInsightsViewControllerV2.swift; sourceTree = "<group>"; };
+		BE24C66A28E490F30067B11A /* PayPalCheckout.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = PayPalCheckout.xcframework; path = ../Frameworks/XCFrameworks/PayPalCheckout.xcframework; sourceTree = "<group>"; };
+		BE35FCD72A1BD162008F0326 /* BraintreeLocalPayment.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BraintreeLocalPayment.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE45D7152AD97C340047E2C7 /* ContainmentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainmentViewController.swift; sourceTree = "<group>"; };
+		BE67CDBF2B29FF7B00BA4904 /* PayPalMessagingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayPalMessagingViewController.swift; sourceTree = "<group>"; };
+		BE67CDC12B2A023F00BA4904 /* BraintreePayPalMessaging.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BraintreePayPalMessaging.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE777AC327D9370400487D23 /* SEPADirectDebitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SEPADirectDebitViewController.swift; sourceTree = "<group>"; };
+		BE994B0A2AD8377D00470773 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		BE994B0C2AD838A500470773 /* PaymentButtonBaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentButtonBaseViewController.swift; sourceTree = "<group>"; };
+		BE9BD75828872E4D00022983 /* BraintreeSEPADirectDebit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BraintreeSEPADirectDebit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BEAAAA332A98E5E6001ECA63 /* IdealViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdealViewController.swift; sourceTree = "<group>"; };
+		BEAAAD042970A70D000BD296 /* BTSEPADirectDebitTestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTSEPADirectDebitTestHelper.swift; sourceTree = "<group>"; };
+		BEBD52822AAB62FB005D6687 /* ApplePayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplePayViewController.swift; sourceTree = "<group>"; };
+		BEBD52842AAB9649005D6687 /* AmexViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmexViewController.swift; sourceTree = "<group>"; };
+		BEBD52862AABA513005D6687 /* ThreeDSecureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeDSecureViewController.swift; sourceTree = "<group>"; };
+		BED461822AD072D9001B0DDF /* CardHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardHelpers.swift; sourceTree = "<group>"; };
+		BED7C4C92ABDD35700EF8550 /* PayPalWebCheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayPalWebCheckoutViewController.swift; sourceTree = "<group>"; };
+		BEE930482A98FE9200C85779 /* DataCollectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCollectorViewController.swift; sourceTree = "<group>"; };
+		BEE9304A2A992F6200C85779 /* CardTokenizationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardTokenizationViewController.swift; sourceTree = "<group>"; };
+		BEF137E42B3381CD00B9B225 /* PayPalMessaging_UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayPalMessaging_UITests.swift; sourceTree = "<group>"; };
+		C8E5BAD1DA81AAD310B19786 /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.release.xcconfig"; path = "Target Support Files/Pods-Demo/Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		42C574A825FA66F9008B3681 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A0988E4624DB43DC0095EEEE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				086561662EF1D4EF00B16439 /* BraintreeUIComponents.framework in Frameworks */,
+				45DDDDA92C08FB0B00C262E5 /* PayPalMessages in Frameworks */,
+				BE67CDC22B2A023F00BA4904 /* BraintreePayPalMessaging.framework in Frameworks */,
+				803D64FB256DAF9A00ACE692 /* BraintreeCore.framework in Frameworks */,
+				9C36BD4C26B311D900F0A559 /* CardinalMobile.xcframework in Frameworks */,
+				803D64F5256DAF9A00ACE692 /* BraintreeAmericanExpress.framework in Frameworks */,
+				BE35FCD82A1BD162008F0326 /* BraintreeLocalPayment.framework in Frameworks */,
+				BE9BD75928872E4D00022983 /* BraintreeSEPADirectDebit.framework in Frameworks */,
+				803D6501256DAF9A00ACE692 /* BraintreePayPal.framework in Frameworks */,
+				803D64FD256DAF9A00ACE692 /* BraintreeDataCollector.framework in Frameworks */,
+				803D64F7256DAF9A00ACE692 /* BraintreeApplePay.framework in Frameworks */,
+				803D6507256DAF9A00ACE692 /* BraintreeVenmo.framework in Frameworks */,
+				803D6503256DAF9A00ACE692 /* BraintreeThreeDSecure.framework in Frameworks */,
+				8028B9782B28D42400C88CE8 /* BraintreeShopperInsights.framework in Frameworks */,
+				803D64F9256DAF9A00ACE692 /* BraintreeCard.framework in Frameworks */,
+				08222B07C311489F90D08D41 /* Pods_Demo.framework in Frameworks */,
+				BE500C7D303F25ED00A5FB81 /* PayPalRisk in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9B5ABDB24EB2A2200A4E1C8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		084C2C6C2FD85A740018BB01 /* CardFields UI Tests */ = {
+			isa = PBXGroup;
+			children = (
+				084C2C6D2FD85A960018BB01 /* CardFields_UITests.swift */,
+			);
+			path = "CardFields UI Tests";
+			sourceTree = "<group>";
+		};
+		08A83F682EE8D0F10076BD28 /* Payment Button UI Tests */ = {
+			isa = PBXGroup;
+			children = (
+				08A83F692EE9AB5A0076BD28 /* VenmoButton_UITests.swift */,
+				08A83F6B2EE9CC730076BD28 /* PayPalButton_UITests.swift */,
+			);
+			path = "Payment Button UI Tests";
+			sourceTree = "<group>";
+		};
+		42456E3B25474B620018374E /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				42456E3C25474B620018374E /* BTUITest.swift */,
+				42456E3D25474B620018374E /* DateGenerator.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		42C574AC25FA66F9008B3681 /* MockVenmo */ = {
+			isa = PBXGroup;
+			children = (
+				42C574AD25FA66F9008B3681 /* AppDelegate.swift */,
+				42C574AF25FA66F9008B3681 /* SceneDelegate.swift */,
+				42C574D425FA6CAC008B3681 /* AppSwitcher.swift */,
+				42C574B125FA66F9008B3681 /* ViewController.swift */,
+				42C574B325FA66F9008B3681 /* Main.storyboard */,
+				42C574B625FA66FB008B3681 /* Assets.xcassets */,
+				42C574B825FA66FB008B3681 /* LaunchScreen.storyboard */,
+				42C574BB25FA66FB008B3681 /* Info.plist */,
+			);
+			path = MockVenmo;
+			sourceTree = "<group>";
+		};
+		80581A752553187800006F53 /* Venmo UI Tests */ = {
+			isa = PBXGroup;
+			children = (
+				80581A5D2553152A00006F53 /* Venmo_UITests.swift */,
+			);
+			path = "Venmo UI Tests";
+			sourceTree = "<group>";
+		};
+		809E86A42ACF6607004998B0 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				625257C6301935C800B69488 /* CardFormView.swift */,
+				04DDF4612EE8AA1200FBDE49 /* PaymentButtonHelper.swift */,
+				803FB9DD26D93146002BF92D /* BTCardFormView.swift */,
+				BEAAAD042970A70D000BD296 /* BTSEPADirectDebitTestHelper.swift */,
+				BED461822AD072D9001B0DDF /* CardHelpers.swift */,
+				62240F592B67FE1100ECE5C9 /* TextFieldWithLabel.swift */,
+				8025988C2CC1A95400E7D898 /* Toggle.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		A0988E4024DB43DC0095EEEE = {
+			isa = PBXGroup;
+			children = (
+				9C36BD4826B3102B00F0A559 /* CardinalMobile.xcframework */,
+				9C030582267BDF9E00DB7A68 /* Demo.entitlements */,
+				A9C4E08024EC2A70002F6FF2 /* Application */,
+				42C574AC25FA66F9008B3681 /* MockVenmo */,
+				A0988FFB24DB44D60095EEEE /* Frameworks */,
+				F1D1FED7D4B39E9B6D0FCC73 /* Pods */,
+				A0988E4A24DB43DC0095EEEE /* Products */,
+				A9B5ABDF24EB2A2200A4E1C8 /* UI Tests */,
+			);
+			sourceTree = "<group>";
+		};
+		A0988E4A24DB43DC0095EEEE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A0988E4924DB43DC0095EEEE /* Demo.app */,
+				A9B5ABDE24EB2A2200A4E1C8 /* UITests.xctest */,
+				42C574AB25FA66F9008B3681 /* MockVenmo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A0988E7C24DB44B10095EEEE /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				809E86A52AD00AF4004998B0 /* AppDelegate.swift */,
+				BE994B0A2AD8377D00470773 /* BaseViewController.swift */,
+				BE45D7152AD97C340047E2C7 /* ContainmentViewController.swift */,
+				BE994B0C2AD838A500470773 /* PaymentButtonBaseViewController.swift */,
+				809E86A72AD01FE7004998B0 /* SceneDelegate.swift */,
+				A0988E8824DB44B10095EEEE /* Launch Screen.storyboard */,
+				A0988E7D24DB44B10095EEEE /* Settings */,
+				7B20BE362F706797A0A110B0 /* UIViewController+Embed.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		A0988E7D24DB44B10095EEEE /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				A0988E7E24DB44B10095EEEE /* BraintreeDemoSettings.swift */,
+				A0988E7F24DB44B10095EEEE /* Settings.bundle */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		A0988F5024DB44B10095EEEE /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A0988F8E24DB44B10095EEEE /* Braintree-Demo.entitlements */,
+				A0988F5724DB44B10095EEEE /* Braintree-Demo-Info.plist */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A0988F5924DB44B10095EEEE /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				62F1F55F304B5E9400C180C2 /* AmexView.swift */,
+				BEBD52842AAB9649005D6687 /* AmexViewController.swift */,
+				BEBD52822AAB62FB005D6687 /* ApplePayViewController.swift */,
+				0827D1663013AEDB00D26DC4 /* ApplePayView.swift */,
+				BEE9304A2A992F6200C85779 /* CardTokenizationViewController.swift */,
+				62DD4F473013E8B4002D79E7 /* CardTokenizationView.swift */,
+				BEE930482A98FE9200C85779 /* DataCollectorViewController.swift */,
+				BEAAAA332A98E5E6001ECA63 /* IdealViewController.swift */,
+				62070626300A8ED500C430AA /* IdealView.swift */,
+				08A83F582EDE268E0076BD28 /* UIComponentsViewController.swift */,
+				BE67CDBF2B29FF7B00BA4904 /* PayPalMessagingViewController.swift */,
+				BED7C4C92ABDD35700EF8550 /* PayPalWebCheckoutViewController.swift */,
+				BE777AC327D9370400487D23 /* SEPADirectDebitViewController.swift */,
+				0827D164300131C100D26DC4 /* SEPADirectDebitView.swift */,
+				8028B9752B28C9E100C88CE8 /* ShopperInsightsViewController.swift */,
+				B88F9CCD2E2196530014BCB7 /* ShopperInsightsViewControllerV2.swift */,
+				BEBD52862AABA513005D6687 /* ThreeDSecureViewController.swift */,
+				80D36DED2A7967F20035380E /* VenmoViewController.swift */,
+				809E86A42ACF6607004998B0 /* Helpers */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		A0988F8F24DB44B20095EEEE /* Merchant API Client */ = {
+			isa = PBXGroup;
+			children = (
+				A0988F9024DB44B20095EEEE /* BraintreeDemoMerchantAPIClient.swift */,
+			);
+			path = "Merchant API Client";
+			sourceTree = "<group>";
+		};
+		A0988FFB24DB44D60095EEEE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				08A83F5A2EDF965E0076BD28 /* BraintreeUIComponents.framework */,
+				8028B9772B28D42400C88CE8 /* BraintreeShopperInsights.framework */,
+				BE67CDC12B2A023F00BA4904 /* BraintreePayPalMessaging.framework */,
+				BE35FCD72A1BD162008F0326 /* BraintreeLocalPayment.framework */,
+				570B93D32853A6D30041BAFE /* BraintreeCoreSwift.framework */,
+				BE24C66A28E490F30067B11A /* PayPalCheckout.xcframework */,
+				BE9BD75828872E4D00022983 /* BraintreeSEPADirectDebit.framework */,
+				42F3F6DB2603B83100401B0D /* CardinalMobile.xcframework */,
+				803D64EA256DAF9A00ACE692 /* BraintreeAmericanExpress.framework */,
+				803D64EB256DAF9A00ACE692 /* BraintreeApplePay.framework */,
+				803D64EC256DAF9A00ACE692 /* BraintreeCard.framework */,
+				803D64ED256DAF9A00ACE692 /* BraintreeCore.framework */,
+				803D64EE256DAF9A00ACE692 /* BraintreeDataCollector.framework */,
+				803D64EF256DAF9A00ACE692 /* BraintreePaymentFlow.framework */,
+				803D64F0256DAF9A00ACE692 /* BraintreePayPal.framework */,
+				803D64F1256DAF9A00ACE692 /* BraintreeThreeDSecure.framework */,
+				803D64F3256DAF9A00ACE692 /* BraintreeVenmo.framework */,
+				6D23244B5E9EE59BAB3F3003 /* Pods_Demo.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A9B5ABDF24EB2A2200A4E1C8 /* UI Tests */ = {
+			isa = PBXGroup;
+			children = (
+				084C2C6C2FD85A740018BB01 /* CardFields UI Tests */,
+				08A83F682EE8D0F10076BD28 /* Payment Button UI Tests */,
+				42456E3B25474B620018374E /* Helpers */,
+				A9B5ABE224EB2A2200A4E1C8 /* Info.plist */,
+				BEF137E32B33818C00B9B225 /* PayPal Messaging UI Tests */,
+				A9C4E07624EC2889002F6FF2 /* PayPal UI Tests */,
+				A9C4E07724EC2899002F6FF2 /* ThreeDSecure UI Tests */,
+				80581A752553187800006F53 /* Venmo UI Tests */,
+			);
+			path = "UI Tests";
+			sourceTree = "<group>";
+		};
+		A9C4E07624EC2889002F6FF2 /* PayPal UI Tests */ = {
+			isa = PBXGroup;
+			children = (
+				A9C4E07A24EC290F002F6FF2 /* PayPal_Vault_UITests.swift */,
+				A9C4E07824EC28F7002F6FF2 /* PayPal_Checkout_UITests.swift */,
+			);
+			path = "PayPal UI Tests";
+			sourceTree = "<group>";
+		};
+		A9C4E07724EC2899002F6FF2 /* ThreeDSecure UI Tests */ = {
+			isa = PBXGroup;
+			children = (
+				A9C4E07C24EC297F002F6FF2 /* ThreeDSecure_V2_UITests.swift */,
+				A9C4E07E24EC2A0C002F6FF2 /* ThreeDSecure_UITests_Extensions.swift */,
+			);
+			path = "ThreeDSecure UI Tests";
+			sourceTree = "<group>";
+		};
+		A9C4E08024EC2A70002F6FF2 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				A0988E7C24DB44B10095EEEE /* Base */,
+				A0988F5924DB44B10095EEEE /* Features */,
+				A0988F8D24DB44B10095EEEE /* Images.xcassets */,
+				A0988F8F24DB44B20095EEEE /* Merchant API Client */,
+				A0988F5024DB44B10095EEEE /* Supporting Files */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		BEF137E32B33818C00B9B225 /* PayPal Messaging UI Tests */ = {
+			isa = PBXGroup;
+			children = (
+				BEF137E42B3381CD00B9B225 /* PayPalMessaging_UITests.swift */,
+			);
+			path = "PayPal Messaging UI Tests";
+			sourceTree = "<group>";
+		};
+		F1D1FED7D4B39E9B6D0FCC73 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				73498B4265CA7D315E2FBF38 /* Pods-Demo.debug.xcconfig */,
+				C8E5BAD1DA81AAD310B19786 /* Pods-Demo.release.xcconfig */,
+			);
+			name = Pods;
+			path = ../Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		42C574AA25FA66F9008B3681 /* MockVenmo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 42C574BE25FA66FB008B3681 /* Build configuration list for PBXNativeTarget "MockVenmo" */;
+			buildPhases = (
+				42C574A725FA66F9008B3681 /* Sources */,
+				42C574A825FA66F9008B3681 /* Frameworks */,
+				42C574A925FA66F9008B3681 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MockVenmo;
+			productName = MockVenmo;
+			productReference = 42C574AB25FA66F9008B3681 /* MockVenmo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A0988E4824DB43DC0095EEEE /* Demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A0988E6224DB43DF0095EEEE /* Build configuration list for PBXNativeTarget "Demo" */;
+			buildPhases = (
+				4B20C942096415547FE03C69 /* [CP] Check Pods Manifest.lock */,
+				A0988E4524DB43DC0095EEEE /* Sources */,
+				A0988E4624DB43DC0095EEEE /* Frameworks */,
+				A0988E4724DB43DC0095EEEE /* Resources */,
+				A098902024DB44D60095EEEE /* Embed Frameworks */,
+				65DE4DA0A163F074298379F4 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Demo;
+			packageProductDependencies = (
+				45DDDDA82C08FB0B00C262E5 /* PayPalMessages */,
+				BE500C7C303F25ED00A5FB81 /* PayPalRisk */,
+			);
+			productName = Demo;
+			productReference = A0988E4924DB43DC0095EEEE /* Demo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A9B5ABDD24EB2A2200A4E1C8 /* UITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A9B5ABE524EB2A2200A4E1C8 /* Build configuration list for PBXNativeTarget "UITests" */;
+			buildPhases = (
+				A9B5ABDA24EB2A2200A4E1C8 /* Sources */,
+				A9B5ABDB24EB2A2200A4E1C8 /* Frameworks */,
+				A9B5ABDC24EB2A2200A4E1C8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				42C574C225FA673B008B3681 /* PBXTargetDependency */,
+				A9B5ABE424EB2A2200A4E1C8 /* PBXTargetDependency */,
+			);
+			name = UITests;
+			productName = DemoUITests;
+			productReference = A9B5ABDE24EB2A2200A4E1C8 /* UITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A0988E4124DB43DC0095EEEE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1240;
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = braintree;
+				TargetAttributes = {
+					42C574AA25FA66F9008B3681 = {
+						CreatedOnToolsVersion = 12.4;
+					};
+					A0988E4824DB43DC0095EEEE = {
+						CreatedOnToolsVersion = 11.5;
+					};
+					A9B5ABDD24EB2A2200A4E1C8 = {
+						CreatedOnToolsVersion = 11.6;
+						TestTargetID = A0988E4824DB43DC0095EEEE;
+					};
+				};
+			};
+			buildConfigurationList = A0988E4424DB43DC0095EEEE /* Build configuration list for PBXProject "Demo" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				de,
+				he,
+				en_AU,
+				"zh-Hans",
+				nb,
+				es,
+				da,
+				it,
+				sv,
+				en_CA,
+				tr,
+				pl,
+				en_GB,
+				ru,
+				fr_CA,
+				es_ES,
+				fr,
+				nl,
+				pt,
+				fr_FR,
+			);
+			mainGroup = A0988E4024DB43DC0095EEEE;
+			packageReferences = (
+				45DDDDA72C08FB0B00C262E5 /* XCRemoteSwiftPackageReference "paypal-messages-ios" */,
+				BE500C7B303F25ED00A5FB81 /* XCRemoteSwiftPackageReference "paypal-risk-ios" */,
+			);
+			productRefGroup = A0988E4A24DB43DC0095EEEE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A0988E4824DB43DC0095EEEE /* Demo */,
+				A9B5ABDD24EB2A2200A4E1C8 /* UITests */,
+				42C574AA25FA66F9008B3681 /* MockVenmo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		42C574A925FA66F9008B3681 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42C574BA25FA66FB008B3681 /* LaunchScreen.storyboard in Resources */,
+				42C574B725FA66FB008B3681 /* Assets.xcassets in Resources */,
+				42C574B525FA66F9008B3681 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A0988E4724DB43DC0095EEEE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A0988F9824DB44B20095EEEE /* Launch Screen.storyboard in Resources */,
+				A0988F9324DB44B20095EEEE /* Settings.bundle in Resources */,
+				A0988FF924DB44B20095EEEE /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9B5ABDC24EB2A2200A4E1C8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4B20C942096415547FE03C69 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Demo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		65DE4DA0A163F074298379F4 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Demo/Pods-Demo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Demo/Pods-Demo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		42C574A725FA66F9008B3681 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42C574B225FA66F9008B3681 /* ViewController.swift in Sources */,
+				42C574AE25FA66F9008B3681 /* AppDelegate.swift in Sources */,
+				42C574D525FA6CAC008B3681 /* AppSwitcher.swift in Sources */,
+				42C574B025FA66F9008B3681 /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A0988E4524DB43DC0095EEEE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8028B9762B28C9E100C88CE8 /* ShopperInsightsViewController.swift in Sources */,
+				BE67CDC02B29FF7B00BA4904 /* PayPalMessagingViewController.swift in Sources */,
+				BEAAAA342A98E5E6001ECA63 /* IdealViewController.swift in Sources */,
+				BE994B0D2AD838A500470773 /* PaymentButtonBaseViewController.swift in Sources */,
+				62240F5A2B67FE1100ECE5C9 /* TextFieldWithLabel.swift in Sources */,
+				BED7C4CA2ABDD35700EF8550 /* PayPalWebCheckoutViewController.swift in Sources */,
+				BEBD52872AABA513005D6687 /* ThreeDSecureViewController.swift in Sources */,
+				803FB9DE26D93146002BF92D /* BTCardFormView.swift in Sources */,
+				BE45D7162AD97C340047E2C7 /* ContainmentViewController.swift in Sources */,
+				A0988FFA24DB44B20095EEEE /* BraintreeDemoMerchantAPIClient.swift in Sources */,
+				BE777AC427D9370400487D23 /* SEPADirectDebitViewController.swift in Sources */,
+				62070627300A8EE100C430AA /* IdealView.swift in Sources */,
+				62F1F560304B5E9400C180C2 /* AmexView.swift in Sources */,
+				B88F9CCE2E2196530014BCB7 /* ShopperInsightsViewControllerV2.swift in Sources */,
+				BEBD52852AAB9649005D6687 /* AmexViewController.swift in Sources */,
+				809E86A82AD01FE7004998B0 /* SceneDelegate.swift in Sources */,
+				BEE9304B2A992F6200C85779 /* CardTokenizationViewController.swift in Sources */,
+				0827D1673013AEDB00D26DC4 /* ApplePayView.swift in Sources */,
+				0827D165300131C100D26DC4 /* SEPADirectDebitView.swift in Sources */,
+				625257C7301935CD00B69488 /* CardFormView.swift in Sources */,
+				BED461832AD072D9001B0DDF /* CardHelpers.swift in Sources */,
+				BE994B0B2AD8377D00470773 /* BaseViewController.swift in Sources */,
+				08A83F592EDE268E0076BD28 /* UIComponentsViewController.swift in Sources */,
+				80D36DEE2A7967F20035380E /* VenmoViewController.swift in Sources */,
+				BEE930492A98FE9200C85779 /* DataCollectorViewController.swift in Sources */,
+				BEBD52832AAB62FB005D6687 /* ApplePayViewController.swift in Sources */,
+				BEAAAD052970A70D000BD296 /* BTSEPADirectDebitTestHelper.swift in Sources */,
+				809E86A62AD00AF4004998B0 /* AppDelegate.swift in Sources */,
+				8025988D2CC1A95400E7D898 /* Toggle.swift in Sources */,
+				04DDF4622EE8AA1900FBDE49 /* PaymentButtonHelper.swift in Sources */,
+				62DD4F483013E8BA002D79E7 /* CardTokenizationView.swift in Sources */,
+				A0988F9224DB44B20095EEEE /* BraintreeDemoSettings.swift in Sources */,
+				91E24EA930E1F3EFF3329A16 /* UIViewController+Embed.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9B5ABDA24EB2A2200A4E1C8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				084C2C6E2FD85A960018BB01 /* CardFields_UITests.swift in Sources */,
+				A9C4E07F24EC2A0C002F6FF2 /* ThreeDSecure_UITests_Extensions.swift in Sources */,
+				42456E3F25474B620018374E /* DateGenerator.swift in Sources */,
+				08A83F6A2EE9AB5A0076BD28 /* VenmoButton_UITests.swift in Sources */,
+				A9C4E07924EC28F7002F6FF2 /* PayPal_Checkout_UITests.swift in Sources */,
+				80581A5F2553170000006F53 /* Venmo_UITests.swift in Sources */,
+				BEF137E52B3381CD00B9B225 /* PayPalMessaging_UITests.swift in Sources */,
+				08A83F6C2EE9CC730076BD28 /* PayPalButton_UITests.swift in Sources */,
+				A9C4E07B24EC290F002F6FF2 /* PayPal_Vault_UITests.swift in Sources */,
+				A9C4E07D24EC297F002F6FF2 /* ThreeDSecure_V2_UITests.swift in Sources */,
+				42456E3E25474B620018374E /* BTUITest.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		42C574C225FA673B008B3681 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 42C574AA25FA66F9008B3681 /* MockVenmo */;
+			targetProxy = 42C574C125FA673B008B3681 /* PBXContainerItemProxy */;
+		};
+		A9B5ABE424EB2A2200A4E1C8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A0988E4824DB43DC0095EEEE /* Demo */;
+			targetProxy = A9B5ABE324EB2A2200A4E1C8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		42C574B325FA66F9008B3681 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				42C574B425FA66F9008B3681 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		42C574B825FA66FB008B3681 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				42C574B925FA66FB008B3681 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		42C574BC25FA66FB008B3681 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 43253H4X22;
+				INFOPLIST_FILE = MockVenmo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.braintreepayments.MockVenmo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		42C574BD25FA66FB008B3681 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 43253H4X22;
+				INFOPLIST_FILE = MockVenmo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.braintreepayments.MockVenmo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A0988E6024DB43DF0095EEEE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		A0988E6124DB43DF0095EEEE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A0988E6324DB43DF0095EEEE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 73498B4265CA7D315E2FBF38 /* Pods-Demo.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+				CODE_SIGN_ENTITLEMENTS = Demo.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 6.0.0;
+				DEVELOPMENT_TEAM = 43253H4X22;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/../Frameworks/**",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/Application/Supporting Files/Braintree-Demo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 6.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.braintreepayments.Demo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_WORKSPACE = YES;
+			};
+			name = Debug;
+		};
+		A0988E6424DB43DF0095EEEE /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C8E5BAD1DA81AAD310B19786 /* Pods-Demo.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+				CODE_SIGN_ENTITLEMENTS = Demo.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 6.0.0;
+				DEVELOPMENT_TEAM = 43253H4X22;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/../Frameworks/**",
+				);
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INFOPLIST_FILE = "$(SRCROOT)/Application/Supporting Files/Braintree-Demo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 6.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.braintreepayments.Demo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_WORKSPACE = YES;
+			};
+			name = Release;
+		};
+		A9B5ABE624EB2A2200A4E1C8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 43253H4X22;
+				INFOPLIST_FILE = "$(SRCROOT)/UI Tests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+					"$(FRAMEWORK_SEARCH_PATHS)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.braintree.DemoUITests;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Demo;
+			};
+			name = Debug;
+		};
+		A9B5ABE724EB2A2200A4E1C8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 43253H4X22;
+				INFOPLIST_FILE = "$(SRCROOT)/UI Tests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+					"$(FRAMEWORK_SEARCH_PATHS)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.braintree.DemoUITests;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Demo;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		42C574BE25FA66FB008B3681 /* Build configuration list for PBXNativeTarget "MockVenmo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				42C574BC25FA66FB008B3681 /* Debug */,
+				42C574BD25FA66FB008B3681 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A0988E4424DB43DC0095EEEE /* Build configuration list for PBXProject "Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A0988E6024DB43DF0095EEEE /* Debug */,
+				A0988E6124DB43DF0095EEEE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A0988E6224DB43DF0095EEEE /* Build configuration list for PBXNativeTarget "Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A0988E6324DB43DF0095EEEE /* Debug */,
+				A0988E6424DB43DF0095EEEE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A9B5ABE524EB2A2200A4E1C8 /* Build configuration list for PBXNativeTarget "UITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A9B5ABE624EB2A2200A4E1C8 /* Debug */,
+				A9B5ABE724EB2A2200A4E1C8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		45DDDDA72C08FB0B00C262E5 /* XCRemoteSwiftPackageReference "paypal-messages-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/paypal/paypal-messages-ios";
+			requirement = {
+				kind = exactVersion;
+				version = 2.0.0;
+			};
+		};
+		BE500C7B303F25ED00A5FB81 /* XCRemoteSwiftPackageReference "paypal-risk-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/paypal/paypal-risk-ios";
+			requirement = {
+				kind = exactVersion;
+				version = 5.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		45DDDDA82C08FB0B00C262E5 /* PayPalMessages */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 45DDDDA72C08FB0B00C262E5 /* XCRemoteSwiftPackageReference "paypal-messages-ios" */;
+			productName = PayPalMessages;
+		};
+		BE500C7C303F25ED00A5FB81 /* PayPalRisk */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BE500C7B303F25ED00A5FB81 /* XCRemoteSwiftPackageReference "paypal-risk-ios" */;
+			productName = PayPalRisk;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A0988E4124DB43DC0095EEEE /* Project object */;
+}

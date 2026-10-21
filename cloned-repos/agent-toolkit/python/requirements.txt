@@ -1,0 +1,27 @@
+# Core dependencies
+httpx>=0.26.0
+requests>=2.31.0
+python-dotenv>=1.0.1
+pydantic>=2.10
+pytest>=7.4.2
+
+#Build Tools
+build
+twine
+
+
+# OpenAI
+openai==1.66.0
+openai-agents==0.0.2
+
+# LangChain
+langchain==0.3.23
+langchain-openai==0.2.2
+
+# CrewAI
+setuptools>=61.0
+crewai==0.76.2
+crewai-tools==0.13.2
+
+# Amazon Bedrock
+boto3==1.39.11

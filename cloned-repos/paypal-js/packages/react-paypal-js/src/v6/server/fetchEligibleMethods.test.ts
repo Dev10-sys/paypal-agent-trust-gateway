@@ -1,0 +1,250 @@
+import {
+  fetchEligibleMethods,
+  useFetchEligibleMethods,
+  type FindEligiblePaymentMethodsRequestPayload,
+} from "./fetchEligibleMethods";
+
+import type { FindEligiblePaymentMethodsResponse } from "../types";
+
+// Mock fetch globally
+global.fetch = jest.fn();
+
+describe("fetchEligibleMethods", () => {
+  const mockClientToken = "test-client-token";
+  const mockPayload: FindEligiblePaymentMethodsRequestPayload = {
+    purchase_units: [
+      {
+        amount: {
+          currency_code: "USD",
+        },
+      },
+    ],
+  };
+  const mockHeaders = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${mockClientToken}`,
+    Accept: "application/json",
+    "Accept-Language": "en-US,en;q=0.9",
+  };
+
+  const mockResponse: FindEligiblePaymentMethodsResponse = {
+    eligible_methods: {
+      paypal: {
+        can_be_vaulted: true,
+        eligible_in_paypal_network: true,
+        recommended: true,
+      },
+      venmo: {
+        can_be_vaulted: false,
+        eligible_in_paypal_network: true,
+      },
+    },
+    supplementary_data: {
+      buyer_country_code: "US",
+    },
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("should successfully fetch eligible methods with sandbox environment", async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockResponse,
+    });
+
+    const result = await fetchEligibleMethods({
+      payload: mockPayload,
+      environment: "sandbox",
+      headers: mockHeaders,
+    });
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      "https://api-m.sandbox.paypal.com/v2/payments/find-eligible-methods",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${mockClientToken}`,
+          Accept: "application/json",
+          "Accept-Language": "en-US,en;q=0.9",
+        },
+        body: JSON.stringify(mockPayload),
+        signal: undefined,
+      },
+    );
+
+    expect(result).toEqual(mockResponse);
+  });
+
+  test("should successfully fetch eligible methods with production environment", async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockResponse,
+    });
+
+    await fetchEligibleMethods({
+      payload: mockPayload,
+      environment: "production",
+      headers: mockHeaders,
+    });
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      "https://api-m.paypal.com/v2/payments/find-eligible-methods",
+      expect.objectContaining({
+        method: "POST",
+      }),
+    );
+  });
+
+  test("should send empty payload when no payload is provided", async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockResponse,
+    });
+
+    await fetchEligibleMethods({
+      environment: "sandbox",
+    });
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        body: JSON.stringify({}),
+      }),
+    );
+  });
+
+  test("should handle HTTP error responses", async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 401,
+      text: async () => "Unauthorized",
+    });
+
+    await expect(
+      fetchEligibleMethods({
+        environment: "sandbox",
+      }),
+    ).rejects.toThrow("Eligibility API error: 401");
+  });
+
+  test("should handle network errors", async () => {
+    (global.fetch as jest.Mock).mockRejectedValueOnce(
+      new Error("Network error"),
+    );
+
+    await expect(
+      fetchEligibleMethods({
+        environment: "sandbox",
+      }),
+    ).rejects.toThrow("Failed to fetch eligible methods: Network error");
+  });
+
+  test("should error when environment is omitted", async () => {
+    await expect(
+      // @ts-expect-error environment is required
+      fetchEligibleMethods({ headers: mockHeaders }),
+    ).rejects.toThrow(
+      'The "environment" option is required and must be either "production" or "sandbox"',
+    );
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  test("should error when environment is explicitly undefined", async () => {
+    await expect(
+      fetchEligibleMethods({
+        // @ts-expect-error environment is required
+        environment: undefined,
+        headers: mockHeaders,
+      }),
+    ).rejects.toThrow(
+      'The "environment" option is required and must be either "production" or "sandbox"',
+    );
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  test("should support abort signal", async () => {
+    const abortController = new AbortController();
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockResponse,
+    });
+
+    await fetchEligibleMethods({
+      environment: "sandbox",
+      signal: abortController.signal,
+    });
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        signal: abortController.signal,
+      }),
+    );
+  });
+
+  test("exposes the deprecated useFetchEligibleMethods alias", () => {
+    expect(useFetchEligibleMethods).toBe(fetchEligibleMethods);
+  });
+
+  describe("prototype pollution hardening", () => {
+    afterEach(() => {
+      delete (Object.prototype as Record<string, unknown>).environment;
+      delete (Object.prototype as Record<string, unknown>).payload;
+      delete (Object.prototype as Record<string, unknown>).headers;
+    });
+
+    test("throws the required-environment error instead of using a polluted environment", async () => {
+      (Object.prototype as Record<string, unknown>).environment = "sandbox";
+
+      await expect(
+        fetchEligibleMethods({
+          payload: mockPayload,
+        } as Parameters<typeof fetchEligibleMethods>[0]),
+      ).rejects.toThrow(
+        'The "environment" option is required and must be either "production" or "sandbox"',
+      );
+      expect(global.fetch).not.toHaveBeenCalled();
+    });
+
+    test("does not forward a prototype-polluted payload when omitted", async () => {
+      (Object.prototype as Record<string, unknown>).payload = {
+        purchase_units: [{ amount: { currency_code: "EVIL" } }],
+      };
+      (global.fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockResponse,
+      });
+
+      await fetchEligibleMethods({ environment: "sandbox" });
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          body: JSON.stringify({}),
+        }),
+      );
+    });
+
+    test("does not forward prototype-polluted headers when omitted", async () => {
+      (Object.prototype as Record<string, unknown>).headers = {
+        "X-Evil": "true",
+      };
+      (global.fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockResponse,
+      });
+
+      await fetchEligibleMethods({ environment: "sandbox" });
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          headers: undefined,
+        }),
+      );
+    });
+  });
+});

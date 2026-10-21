@@ -1,0 +1,347 @@
+import { useRef } from "react";
+
+import type { Components } from "./types";
+
+/**
+ * Performs a shallow equality check on two arrays.
+ *
+ * This function compares two arrays element-by-element using strict equality (===).
+ * It's primarily used to compare the `components` prop arrays passed to PayPalProvider
+ * to prevent unnecessary re-initialization of the PayPal SDK.
+ *
+ * This optimization is important because re-initializing the SDK is an expensive operation
+ * that involves loading scripts and setting up PayPal integrations.
+ *
+ * @param arr1 - First array to compare
+ * @param arr2 - Second array to compare
+ * @returns `true` if both arrays are null/undefined, or if they contain the same elements in the same order
+ *
+ * @example
+ * // Returns true - both arrays have the same elements in the same order
+ * shallowEqualArray(
+ *   ["paypal-payments", "venmo-payments"],
+ *   ["paypal-payments", "venmo-payments"]
+ * );
+ *
+ * @example
+ * // Returns false - different order
+ * shallowEqualArray(
+ *   ["paypal-payments", "venmo-payments"],
+ *   ["venmo-payments", "paypal-payments"]
+ * );
+ *
+ * @example
+ * // Returns true - both are null
+ * shallowEqualArray(null, null);
+ */
+function shallowEqualArray<T>(
+  arr1: readonly T[] | null | undefined,
+  arr2: readonly T[] | null | undefined,
+): boolean {
+  if (!arr1 && !arr2) {
+    return true;
+  }
+
+  if (!arr1 || !arr2) {
+    return false;
+  }
+
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr2[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Custom hook that memoizes a components array based on shallow equality comparison.
+ * Returns a stable reference when the array contents haven't changed.
+ *
+ * This allows developers to pass inline component arrays without causing unnecessary re-renders
+ * when the array values are the same, even if the array reference changes.
+ *
+ * @param value - The components array to memoize
+ * @returns A stable reference to the components array
+ *
+ * @example
+ * const memoizedComponents = useCompareMemoize(["paypal-payments", "venmo-payments"]);
+ */
+export function useCompareMemoize<
+  T extends readonly Components[] | null | undefined,
+>(value: T): T {
+  const ref = useRef<T>(value);
+
+  if (!shallowEqualArray(ref.current, value)) {
+    ref.current = value;
+  }
+
+  return ref.current;
+}
+
+export function useProxyProps<T extends Record<PropertyKey, unknown>>(
+  props: T,
+): T {
+  const proxyRef = useRef(
+    new Proxy<T>({} as T, {
+      get(target: T, prop: PropertyKey, receiver) {
+        /**
+         *
+         * If target[prop] is a function, return a function that accesses
+         * this function off the target object. We can mutate the target with
+         * new copies of this function without having to re-render the
+         * SDK components to pass new callbacks.
+         *
+         * */
+        if (typeof target[prop] === "function") {
+          return (...args: unknown[]) =>
+            (target[prop] as (...args: unknown[]) => unknown)(...args);
+        }
+
+        return Reflect.get(target, prop, receiver);
+      },
+    }),
+  );
+
+  proxyRef.current = Object.assign(proxyRef.current, props);
+
+  return proxyRef.current;
+}
+
+/**
+ * Normalize input to an {@link Error} instance.
+ *
+ * @param {unknown} error - this argument will be coerced into a String then passed into a new
+ *      {@link Error}. If it's already an {@link Error} instance, it will be returned without modification.
+ * @returns {Error}
+ *
+ * @example
+ * toError("An error occurred");
+ *
+ * @example
+ * const myError = new Error("An error occurred");
+ * toError(myError);
+ */
+export function toError(error: unknown): Error {
+  if (error instanceof Error) {
+    return error;
+  }
+
+  return new Error(String(error));
+}
+
+/**
+ * Custom hook that memoizes a value based on deep equality comparison.
+ * Returns a stable reference when the value hasn't changed, even if the
+ * object or array reference is new.
+ *
+ * This allows developers to pass inline objects or arrays without causing
+ * unnecessary re-renders or effect re-runs when the values are the same.
+ *
+ * @param value - The value to memoize
+ * @returns A stable reference to the value
+ *
+ * @example
+ * const memoizedAmount = useDeepCompareMemoize({ value: "10.00", currencyCode: "USD" });
+ */
+export function useDeepCompareMemoize<T>(value: T): T {
+  const ref = useRef<{ value: T }>();
+
+  if (!ref.current || !deepEqual(value, ref.current.value)) {
+    ref.current = { value };
+  }
+
+  return ref.current.value;
+}
+
+/**
+ * Performs a recursive deep equality check on two values.
+ *
+ * Handles primitives, null/undefined, arrays, and plain objects. Recursion is
+ * bounded by `maxDepth` (default: 10) to prevent stack overflow on deeply nested
+ * structures — comparison returns `false` if the limit is exceeded.
+ *
+ * @param obj1 - First value to compare
+ * @param obj2 - Second value to compare
+ * @param maxDepth - Maximum recursion depth (default: 10)
+ * @param currentDepth - Current recursion depth, used internally
+ * @returns `true` if both values are deeply equal, `false` otherwise
+ *
+ * @example
+ * deepEqual({ amount: "10.00", currency: "USD" }, { amount: "10.00", currency: "USD" }); // true
+ * deepEqual({ amount: "10.00" }, { amount: "20.00" }); // false
+ */
+// eslint-disable-next-line max-params
+export function deepEqual(
+  obj1: unknown,
+  obj2: unknown,
+  maxDepth = 10,
+  currentDepth = 0,
+): boolean {
+  // Prevent infinite recursion by limiting depth
+  if (currentDepth > maxDepth) {
+    return false;
+  }
+
+  // Handle primitives and same reference
+  if (obj1 === obj2) {
+    return true;
+  }
+
+  // Handle null/undefined
+  if (
+    obj1 === null ||
+    obj1 === undefined ||
+    obj2 === null ||
+    obj2 === undefined
+  ) {
+    return false;
+  }
+
+  // Different types are not equal
+  if (typeof obj1 !== typeof obj2) {
+    return false;
+  }
+
+  // Non-object primitives (number, string, boolean, function, symbol, bigint) that
+  // Same typeof (verified above) but not ===, so unequal primitives
+  if (typeof obj1 !== "object") {
+    return false;
+  }
+
+  // Handle Arrays
+  if (Array.isArray(obj1) && Array.isArray(obj2)) {
+    if (obj1.length !== obj2.length) {
+      return false;
+    }
+    for (let i = 0; i < obj1.length; i++) {
+      if (!deepEqual(obj1[i], obj2[i], maxDepth, currentDepth + 1)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // One is array, the other is not
+  if (Array.isArray(obj1) || Array.isArray(obj2)) {
+    return false;
+  }
+
+  // At this point, we know both are non-null objects
+  const record1 = obj1 as Record<string, unknown>;
+  const record2 = obj2 as Record<string, unknown>;
+
+  const keys1 = Object.keys(record1);
+  const keys2 = Object.keys(record2);
+
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+
+  for (const key of keys1) {
+    if (!deepEqual(record1[key], record2[key], maxDepth, currentDepth + 1)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Detects the empty sentinel MessageContent the SDK returns on a fetch error.
+ *
+ * On an API error, PayPal Messages `fetchContent` resolves to a MessageContent whose
+ * `messageItems` is null or has empty main/action arrays (rather than throwing), so the
+ * `<paypal-message>` element recognizes the error state and collapses. A nullish result
+ * is likewise treated as empty. `messageItems` being absent is treated as valid content
+ * to avoid false positives.
+ *
+ * @param content - The value returned by `fetchContent`
+ * @returns `true` if the content is the empty error sentinel (or nullish)
+ *
+ * @example
+ * isEmptyMessageContent({ messageItems: { mainItems: [], actionItems: [] } }); // true
+ * isEmptyMessageContent({ messageItems: { mainItems: [block] } }); // false
+ */
+export function isEmptyMessageContent(content: unknown): boolean {
+  if (content === null || content === undefined) {
+    return true;
+  }
+
+  if (typeof content !== "object") {
+    return false;
+  }
+
+  const items = (
+    content as {
+      messageItems?: { mainItems?: unknown[]; actionItems?: unknown[] } | null;
+    }
+  ).messageItems;
+
+  if (items === undefined) {
+    return false; // no signal -> assume valid content
+  }
+
+  if (items === null) {
+    return true;
+  }
+
+  return (
+    (items.mainItems?.length ?? 0) === 0 &&
+    (items.actionItems?.length ?? 0) === 0
+  );
+}
+
+interface CreatePaymentSessionOptions<T> {
+  sessionCreator: () => T;
+  failedSdkRef: { current: unknown };
+  sdkInstance: unknown;
+  setError: (error: Error | null) => void;
+  errorMessage: string;
+}
+
+/**
+ * Creates a payment session with error handling and retry prevention.
+ *
+ * @param options - Configuration for creating the payment session
+ * @returns The payment session or null if creation fails
+ *
+ * @example
+ * const session = createPaymentSession({
+ *   sessionCreator: () => sdkInstance.createPayPalOneTimePaymentSession({ orderId, ...callbacks }),
+ *   failedSdkRef,
+ *   sdkInstance,
+ *   setError,
+ *   errorMessage: 'Failed to create payment session. This may occur if the required component "paypal-payments" is not included in the SDK components array.',
+ * });
+ *
+ * if (!session) return;
+ */
+export function createPaymentSession<T>({
+  sessionCreator,
+  failedSdkRef,
+  sdkInstance,
+  setError,
+  errorMessage,
+}: CreatePaymentSessionOptions<T>): T | null {
+  // Skip retry if this SDK instance already failed
+  if (failedSdkRef.current === sdkInstance) {
+    return null;
+  }
+
+  try {
+    return sessionCreator();
+  } catch (err) {
+    failedSdkRef.current = sdkInstance;
+
+    const detailedError = new Error(errorMessage, { cause: err });
+
+    setError(detailedError);
+    return null;
+  }
+}

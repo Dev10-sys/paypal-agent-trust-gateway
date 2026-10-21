@@ -1,0 +1,211 @@
+import { useCallback, useEffect, useRef } from "react";
+
+import { usePayPal } from "./usePayPal";
+import { useIsMountedRef } from "./useIsMounted";
+import { useError } from "./useError";
+import { useProxyProps, createPaymentSession } from "../utils";
+import { INSTANCE_LOADING_STATE } from "../types/ProviderEnums";
+
+import type {
+  BasePaymentSessionReturn,
+  CreateOrderCallback,
+  OneTimePaymentSession,
+  PayLaterOneTimePaymentSessionOptions,
+  PayPalPresentationModeOptions,
+  WithOptionalPresentationMode,
+} from "../types";
+
+export type UsePayLaterOneTimePaymentSessionProps = (
+  | (Omit<PayLaterOneTimePaymentSessionOptions, "orderId"> & {
+      createOrder: CreateOrderCallback;
+      orderId?: never;
+    })
+  | (PayLaterOneTimePaymentSessionOptions & {
+      createOrder?: never;
+      orderId: string;
+    })
+) &
+  WithOptionalPresentationMode<PayPalPresentationModeOptions>;
+
+/**
+ * Hook for managing Pay Later one-time payment sessions.
+ *
+ * This hook creates and manages a Pay Later payment session. It handles session lifecycle, resume flows
+ * for redirect-based presentation modes (`"redirect"` and `"direct-app-switch"`), and provides methods
+ * to start, cancel, and destroy the session.
+ *
+ * Eligibility must be fetched separately (via the `useEligibleMethods` hook client-side or
+ * `fetchEligibleMethods` server-side) to obtain the `countryCode`/`productCode` the
+ * `<paypal-pay-later-button>` needs to render.
+ *
+ * @returns Object with: `error` (any session error), `isPending` (SDK loading), `handleClick` (starts session), `handleCancel` (cancels session), `handleDestroy` (cleanup)
+ *
+ * `presentationMode` is optional and defaults to `"auto"`.
+ *
+ * @example
+ * function PayLaterCheckoutButton() {
+ *   const { error, isPending, handleClick, handleCancel } = usePayLaterOneTimePaymentSession({
+ *     presentationMode: 'popup',
+ *     createOrder: async () => ({ orderId: 'ORDER-123' }),
+ *     onApprove: (data) => console.log('Approved:', data),
+ *     onCancel: () => console.log('Cancelled'),
+ *   });
+ *
+ *   // Fetch eligibility (or hydrate server-side via fetchEligibleMethods)
+ *   const { eligiblePaymentMethods, isLoading } = useEligibleMethods({
+ *     payload: { purchase_units: [{ amount: { currency_code: "USD" } }] },
+ *   });
+ *
+ *   if (isPending || isLoading) return <Spinner />;
+ *
+ *   if (!eligiblePaymentMethods?.isEligible("paylater")) {
+ *     return null;
+ *   }
+ *
+ *   const payLaterDetails = eligiblePaymentMethods?.getDetails?.("paylater");
+ *
+ *   if (error) return <div>Error: {error.message}</div>;
+ *
+ *   return (
+ *     <paypal-pay-later-button
+ *       countryCode={payLaterDetails?.countryCode}
+ *       productCode={payLaterDetails?.productCode}
+ *       onClick={handleClick}
+ *       onCancel={handleCancel}
+ *     />
+ *   );
+ * }
+ */
+export function usePayLaterOneTimePaymentSession({
+  presentationMode = "auto",
+  fullPageOverlay,
+  autoRedirect,
+  createOrder,
+  orderId,
+  ...callbacks
+}: UsePayLaterOneTimePaymentSessionProps): BasePaymentSessionReturn {
+  const { sdkInstance, loadingStatus } = usePayPal();
+  const isMountedRef = useIsMountedRef();
+  const sessionRef = useRef<OneTimePaymentSession | null>(null);
+  const proxyCallbacks = useProxyProps(callbacks);
+  const [error, setError] = useError();
+
+  // Prevents retrying session creation with a failed SDK instance
+  const failedSdkRef = useRef<unknown>(null);
+
+  const isPending = loadingStatus === INSTANCE_LOADING_STATE.PENDING;
+
+  const handleDestroy = useCallback(() => {
+    sessionRef.current?.destroy();
+    sessionRef.current = null;
+  }, []);
+
+  // Handle SDK availability
+  useEffect(() => {
+    // Reset failed SDK tracking when SDK instance changes
+    if (failedSdkRef.current !== sdkInstance) {
+      failedSdkRef.current = null;
+    }
+
+    if (sdkInstance) {
+      setError(null);
+    } else if (loadingStatus !== INSTANCE_LOADING_STATE.PENDING) {
+      setError(new Error("no sdk instance available"));
+    }
+  }, [sdkInstance, setError, loadingStatus]);
+
+  // Create and manage session lifecycle
+  useEffect(() => {
+    if (!sdkInstance) {
+      return;
+    }
+
+    const newSession = createPaymentSession({
+      sessionCreator: () =>
+        sdkInstance.createPayLaterOneTimePaymentSession({
+          orderId,
+          ...proxyCallbacks,
+        }),
+      failedSdkRef,
+      sdkInstance,
+      setError,
+      errorMessage:
+        'Failed to create payment session. This may occur if the required component "paypal-payments" is not included in the SDK components array.',
+    });
+
+    if (!newSession) {
+      return;
+    }
+
+    sessionRef.current = newSession;
+
+    // check for resume flow in redirect-based presentation modes
+    const isRedirectMode =
+      presentationMode === "redirect" ||
+      presentationMode === "direct-app-switch";
+
+    if (isRedirectMode) {
+      const handleReturnFromPayPal = async () => {
+        try {
+          if (!newSession) {
+            return;
+          }
+          const isResumeFlow = newSession.hasReturned?.();
+          if (isResumeFlow) {
+            await newSession.resume?.();
+          }
+        } catch (err) {
+          setError(err as Error);
+        }
+      };
+
+      handleReturnFromPayPal();
+    }
+
+    return () => {
+      newSession.destroy();
+    };
+  }, [sdkInstance, orderId, proxyCallbacks, presentationMode, setError]);
+
+  const handleCancel = useCallback(() => {
+    sessionRef.current?.cancel();
+  }, []);
+
+  const handleClick = useCallback(async () => {
+    if (!isMountedRef.current) {
+      return;
+    }
+
+    if (!sessionRef.current) {
+      setError(new Error("PayLater session not available"));
+      return;
+    }
+
+    const startOptions = {
+      presentationMode,
+      fullPageOverlay,
+      autoRedirect,
+    } as PayPalPresentationModeOptions;
+
+    const result = await sessionRef.current.start(
+      startOptions,
+      createOrder?.(),
+    );
+    return result;
+  }, [
+    createOrder,
+    presentationMode,
+    fullPageOverlay,
+    autoRedirect,
+    isMountedRef,
+    setError,
+  ]);
+
+  return {
+    error,
+    isPending,
+    handleCancel,
+    handleClick,
+    handleDestroy,
+  };
+}

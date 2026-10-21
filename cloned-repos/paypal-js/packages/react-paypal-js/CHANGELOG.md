@@ -1,0 +1,770 @@
+# Changelog
+
+## 10.6.0
+
+### Minor Changes
+
+- aa4de45: Adds Venmo vault support to the v6 React SDK:
+  - `VenmoOneTimePaymentButton` now accepts a `savePayment` prop to vault the buyer's Venmo account while completing an order (VAULT_WITH_PAYMENT).
+  - New `VenmoSavePaymentButton` component for a vault-only flow with no purchase (VAULT_WITHOUT_PAYMENT), supporting both lazy (`createVaultToken`) and eager (`vaultSetupToken`) vault setup token creation.
+
+### Patch Changes
+
+- Updated dependencies [adc91b9]
+  - @paypal/paypal-js@11.2.1
+
+## 10.5.2
+
+### Patch Changes
+
+- 5f45d73: This adds Object prototype pollution guards to prevent remote code execution.
+- Updated dependencies [5f61e1d]
+  - @paypal/paypal-js@11.2.0
+
+## 10.5.1
+
+### Patch Changes
+
+- 419f4ac: Align v6 Local Payment Method session-field metadata with the core Web SDK.
+- Updated dependencies [934c705]
+  - @paypal/paypal-js@11.1.1
+
+## 10.5.0
+
+### Minor Changes
+
+- 4286bfc: Added new PayPalCardNameField component to use with Card Fields
+- 7060972: Add React wrappers for all 50 v6 SDK Local Payment Methods (LPMs) to the existing `@paypal/react-paypal-js/sdk-v6` entry. The legacy `@paypal/react-paypal-js` entry remains unaffected.
+
+  Each LPM ships three usage patterns:
+
+  ```tsx
+  import {
+    PayPalProvider,
+    IdealOneTimePaymentButton,
+    useIdealOneTimePaymentSession,
+    IdealPaymentButton,
+  } from "@paypal/react-paypal-js/sdk-v6";
+  ```
+
+  - An all-in-one named button, e.g. `IdealOneTimePaymentButton`.
+  - A split hook + standalone button, e.g. `useIdealOneTimePaymentSession` + `IdealPaymentButton`.
+  - A generic dynamic-selector button, `LPMOneTimePaymentButton`.
+
+  PayPal and LPM components imported from `@paypal/react-paypal-js/sdk-v6` share the same `PayPalProvider`, React context, and SDK instance. Named LPM factory calls are annotated as side-effect free, allowing compatible bundlers to remove unused React wrapper components and hooks. When at least one LPM is used, the shared `LPM_REGISTRY` remains because the factories access it by runtime key.
+
+  The rendered payment fields can be prefilled with initial values (mapping to the SDK `createPaymentFields({ value })` option):
+  - `LPMOneTimePaymentButton` (and the named `*OneTimePaymentButton` components) accept a `fieldValues` prop, e.g. `fieldValues={{ name: "John Doe", email: "john@example.com" }}`.
+  - The field components returned by the `use*OneTimePaymentSession` hooks accept a `value` prop.
+
+  Each entry in `LPM_REGISTRY` also carries a `testBuyerCountry` (ISO 3166 alpha-2) so sandbox/testing integrations can set the buyer country the LPM session creators require.
+
+- 3dbd4a7: Updates the useVenmo one time payment hook to accept the sandboxSupport object and pass it to .start.
+
+### Patch Changes
+
+- Updated dependencies [d4bc19a]
+- Updated dependencies [cb9899e]
+- Updated dependencies [a6997f0]
+  - @paypal/paypal-js@11.1.0
+
+## 10.4.1
+
+### Patch Changes
+
+- 24ccc6a: Correct the `PayPalOneTimePaymentButton` README example to include the required `onApprove` callback.
+
+  The example previously rendered `<PayPalOneTimePaymentButton orderId="ORDER-123" />` without `onApprove`, which does not type-check now that `onApprove` is correctly required for one-time PayPal payments ([#1020](https://github.com/paypal/paypal-js/issues/1020)).
+
+- eb54388: Emit a nested `dist/v6/esm/package.json` with `{"type":"module"}` so the v6 ESM bundles (main and server) are correctly signaled as ES modules.
+
+  The v6 build outputs ESM syntax into `.js` files, but the package has no root `"type":"module"` (it can't — that would relabel the v5 CJS bundles). Under Node's resolution rules those `.js` files therefore default to CommonJS, so a native ESM import of `@paypal/react-paypal-js/sdk-v6` (or `/sdk-v6/server`) triggers a `MODULE_TYPELESS_PACKAGE_JSON` warning plus a reparse penalty on modern Node, and fails to load outright on older Node or loaders without ESM syntax detection. The nested marker scopes the ESM declaration to the v6 directory only, leaving the v5 CJS artifacts untouched.
+
+- Updated dependencies [39f147e]
+- Updated dependencies [24ccc6a]
+- Updated dependencies [eb54388]
+  - @paypal/paypal-js@11.0.1
+
+## 10.4.0
+
+### Minor Changes
+
+- c3b5dbe: Add 3D Secure (SCA) support to the Google Pay one-time payment hook and button.
+
+  When `confirmOrder` returns `PAYER_ACTION_REQUIRED`, `useGooglePayOneTimePaymentSession`
+  (and `GooglePayOneTimePaymentButton`) now launches the payer-action flow automatically. The
+  3DS modal runs after Google's payment sheet closes, and `onApprove` fires only once the
+  buyer completes authentication — so merchants never capture an unauthenticated order. The
+  `onApprove` data now carries the resulting `liabilityShift` (via the new
+  `GooglePayOnApproveData` type). A buyer cancel or authentication failure is reported through
+  `onError`.
+
+- 6b10c2b: Remove PayPal's homegrown `ApplePaySession` browser-global typing from the v6 types.
+
+  `@paypal/react-paypal-js` now types Apple's native session via `@types/applepayjs` internally. If you reference Apple Pay's native browser global in your own code, use the bare `ApplePaySession` global (e.g. `typeof ApplePaySession !== "undefined" && ApplePaySession.canMakePayments()`) and install the community typings: `npm install --save-dev @types/applepayjs`.
+
+### Patch Changes
+
+- Updated dependencies [c3b5dbe]
+- Updated dependencies [6b10c2b]
+- Updated dependencies [be48634]
+- Updated dependencies [be48634]
+  - @paypal/paypal-js@11.0.0
+
+## 10.3.0
+
+### Minor Changes
+
+- 3413d0f: This change implements a new feature of the Eligibility API in response to JS SDK eligibility requests. In some cases the request merchant origin was getting overwritten. This caused a bug in particular in the Google Pay payments flow. Merchants can now pass a merchant origin to the eligibility API via the server method fetchEligibleMethods.
+
+## 10.2.1
+
+### Patch Changes
+
+- 10fdbc1: Fix: race condition between server-hydrated eligibility and client-side fetch
+
+## 10.2.0
+
+### Minor Changes
+
+- d9c0200: Add `useBraintreePayPalMessages`, a v6 hook for rendering PayPal promotional / BNPL messaging (`<paypal-message>`) via Braintree.
+  - Wraps `BraintreePayPalCheckoutInstance.createMessages` on the shared instance from `useBraintreePayPal`. Because Braintree's `createMessages` is asynchronous (unlike the PayPal SDK's synchronous `createPayPalMessages`), the instance is created in an effect that awaits the Promise and guards against unmount / instance change before storing it.
+  - Returns `error`, `isReady`, `isLoading`, and `handleFetchContent(options)`, which fetches message content for a `<paypal-message>` element and resolves to a content object exposing `update({ amount })` so the displayed amount can change without re-fetching.
+  - Provider-level failures are surfaced separately and labeled (`Braintree PayPal context error: …`), distinct from instance/fetch errors, so consumers can tell which layer failed.
+  - Adds `BraintreeMessagesOptions`, `BraintreeMessagesInstance`, `BraintreeMessageContent`, and `BraintreeFetchMessageContentOptions` types, plus `createMessages` on `BraintreePayPalCheckoutInstance`.
+
+- 31e7976: Rename the v6 server-side `useFetchEligibleMethods` to `fetchEligibleMethods` and move it out of the `hooks/` directory. It is a plain server-side async function (`import "server-only"`, called with `await`), not a React hook — the `use` prefix falsely signaled a hook and tripped `eslint-plugin-react-hooks` (`rules-of-hooks` / `no-unnecessary-use-prefix`) in consumer projects, producing false "React Hook cannot be called in an async function / conditionally" errors.
+
+  Also renames the client hook `useEligibleMethods`'s public option/result types `UseFetchEligibleMethodsOptions` / `UseFetchEligibleMethodsResult` to `UseEligibleMethodsOptions` / `UseEligibleMethodsResult` to match the hook name.
+
+  All previous names remain exported as `@deprecated` aliases, so this is non-breaking:
+  - `useFetchEligibleMethods` → `fetchEligibleMethods` (from `@paypal/react-paypal-js/sdk-v6/server`)
+  - `UseFetchEligibleMethodsOptions` → `UseEligibleMethodsOptions`
+  - `UseFetchEligibleMethodsResult` → `UseEligibleMethodsResult`
+
+  The deprecated aliases will be removed in the next major release.
+
+### Patch Changes
+
+- 383aa32: This change fixes the condition to skip eligibility request if it has already been server hydrated. This change also updates the README to demonstrate how the SDK can be hydrated with a server-side fetched response via the v6 PayPal Provider.
+- e3bb955: Stop shipping the TypeScript incremental-build cache (`dist/tsconfig.lib.tsbuildinfo`) in the published npm package. The build-info file is now written to `node_modules/.cache/tsc/` instead of `dist/`, trimming ~72 kB unpacked (~25 kB gzipped) from the tarball. No functional or API change — the library output is byte-identical.
+- Updated dependencies [09f2994]
+- Updated dependencies [d9c0200]
+  - @paypal/paypal-js@10.1.0
+
+## 10.1.2
+
+### Patch Changes
+
+- 110a043: `ApplePayOneTimePaymentButton` no longer writes a `disabled` attribute to Apple's `<apple-pay-button>`, which ignored it and manages its own enabled/disabled state internally via `canMakePayments()`. The non-functional `disabled` prop has been removed — merchants control presentation themselves.
+- a987b2e: Adds 1 enum value to the paypal messages element logoType property.
+- Updated dependencies [4619c74]
+  - @paypal/paypal-js@10.0.3
+
+## 10.1.1
+
+### Patch Changes
+
+- 6714f3f: Migrate the v5 React SDK Storybook from Storybook 6 to Storybook 10 (`@storybook/react-vite`) and extract it out of this package into its own `@paypal/react-paypal-js-storybook-v5` workspace (mirroring the v6 storybook). This is a tooling/dev-dependency change only — the published package output is unchanged; it removes the Storybook toolchain from this library's devDependencies.
+- Updated dependencies [cfcb985]
+  - @paypal/paypal-js@10.0.2
+
+## 10.1.0
+
+### Minor Changes
+
+- 0ae4e9d: Add Braintree PayPal Pay Later (BNPL) support and a companion eligibility hook for v6.
+  - `useBraintreePayPalPayLaterSession` — manages a Pay Later session (`error`, `isPending`, `handleClick`), consistent with the existing one-time-payment, billing-agreement, and checkout-with-vault hooks.
+  - `useBraintreeEligibleMethods` — fetches eligibility via `findEligibleMethods` and caches it on the provider, deduplicating by checkout instance + options and refetching when either changes.
+  - Provider-level failures are now surfaced separately and labeled (`Braintree provider error: …`, with the original error as `cause`), distinct from "checkout instance not available", so consumers can tell which layer failed.
+  - Add `shippingCallbackUrl`, `shippingAddressOverride` (now typed as `BraintreeShippingAddressOverride` instead of `Record<string, unknown>`), and `contactPreference` options to the one-time, Pay Later, and checkout-with-vault session types.
+  - `BraintreeEligibilityResult.getDetails` is now strongly typed per funding source.
+
+- fba3cff: Add `BraintreePayPalPayLaterButton`, a prebuilt v6 button that renders
+  `<paypal-pay-later-button>` and drives the Braintree PayPal Pay Later (BNPL) flow via
+  `useBraintreePayPalPayLaterSession`, sourcing `countryCode`/`productCode` from provider
+  eligibility.
+
+  Docs: clarify that the Pay Later and Credit buttons require eligibility to be fetched first —
+  via `useEligibleMethods` (client) or `useFetchEligibleMethods` (server) — with updated JSDoc
+  and README examples.
+
+### Patch Changes
+
+- b6e0982: Fix jest-environment-dom package migration bug.
+- d4f6cdc: Type the `<paypal-basic-card-button>` JSX element's buyer-country input as the kebab-case `buyer-country` attribute instead of a camelCase `buyerCountry` prop. The element's observed attribute is `buyer-country`, so a camelCase JSX prop is lowercased to `buyercountry` on React <19 and never reaches it. Buyer country is normally determined by the SDK; this only corrects the JSX type for the case where a merchant sets the attribute directly.
+- edf33ab: Raises an error when the Google Pay script has not loaded when the React component has mounted.
+- a648de2: Fix stale error and potential perpetual loader bug in useEligibleMethods.
+- 3b84cd6: Fix: `useFetchEligibleMethods` now requires the `environment` option, matching the `loadCoreSdkScript` / `PayPalProvider` change in v10.0.0. Previously, omitting `environment` silently fell through to the sandbox eligibility API (`https://api-m.sandbox.paypal.com`), which could cause a production server-rendered checkout to hydrate `PayPalProvider` with sandbox eligibility data while the client loaded the production SDK — surfacing as missing or incorrect payment buttons. TypeScript users will now see a compile error if `environment` is omitted; runtime callers will see a thrown `Error`. Pass `environment: "production"` or `environment: "sandbox"` explicitly.
+
+  ```ts
+  // Before (silently used sandbox)
+  const response = await useFetchEligibleMethods({ headers, payload });
+
+  // After (required)
+  const response = await useFetchEligibleMethods({
+    environment: "production", // or "sandbox"
+    headers,
+    payload,
+  });
+  ```
+
+- Updated dependencies [d7f697b]
+- Updated dependencies [983beb7]
+- Updated dependencies [7d44dcc]
+  - @paypal/paypal-js@10.0.1
+
+## 10.0.0
+
+### Major Changes
+
+- 114d09c: **BREAKING:** The v6 `environment` option is now required in the `PayPalProvider`. Previously, omitting `environment` silently defaulted to sandbox, which could cause production builds to load the sandbox SDK with a live `clientId`. Pass `environment: "production"` or `environment: "sandbox"` explicitly. TypeScript users will see a compile error; runtime callers will see a thrown `Error`.
+
+  ### v6 PayPalProvider
+
+  Update the PayPalProvider to pass the environment property
+
+  ```
+  <PayPalProvider
+    clientId={clientId}
+    environment="sandbox" // "production"
+    components={["paypal-payments",]}
+    pageType="checkout"
+  >
+    <CheckoutPage />
+  </PayPalProvider>
+  ```
+
+### Patch Changes
+
+- Updated dependencies [114d09c]
+  - @paypal/paypal-js@10.0.0
+
+## 9.3.0
+
+### Minor Changes
+
+- 145d3c5: Adds the Braintree with PayPal Checkout with Vault button component.
+- 2bcb79d: Add a new static UI component for braintree paypal one time payment.
+- 63d8fca: Add the Braintree-PayPal Billing Agreement Hook
+- 61ee8ca: Makes presentationMode optional for v6 buttons and hooks, and sets a default value for each hook.
+- 3d3b60e: Add Braintree-PayPal integration documentation.
+- 0ff45b7: Implementing GooglePay hook and the button component
+- 82da8dd: Adds Braintree Checkout with Vault hook
+- 1974cd9: Adds Braintree-PayPal Billing Agreement button component.
+
+### Patch Changes
+
+- 6e97c29: Fix onError type intersection in ApplePayButtonElementProps by adding Omit<HTMLAttributes, "onError"> consistent with ButtonProps pattern
+- 658db62: Fixing ApplePay styling issue
+- ee72ab1: Update README with Apple component documentation.
+- 5112bf2: Fix to prevent ApplePaySession completePayment twice
+- Updated dependencies [9007a82]
+- Updated dependencies [6e1de75]
+- Updated dependencies [0ff45b7]
+- Updated dependencies [164d373]
+  - @paypal/paypal-js@9.8.0
+
+## 9.2.0
+
+### Minor Changes
+
+- dc4957a: Adds Braintree PayPal One Time Payment Session hook.
+- c103e7c: Adds Braintree PayPal Provider and context hook.
+- 8615050: Updates typescript to version minimum 5.9.3
+- 4974af9: Adding ApplePay OnetimePayment hook and button component
+
+### Patch Changes
+
+- ffee35f: Fix to prevent merchant paymentRequest from overriding SDK-managed Apple Pay config
+- f37e7bb: Fixes a root package-lock missing caret for typescript.
+- 88bd1b3: Fix useEligibleMethods hook returning isLoading=false with stale eligibility data when payload changes (e.g., navigating between different payment flows)
+- 309d308: Use default prettier settings for code formatting
+- 4f63e24: Enhances the create payment session utility to account for the Braintree hook use case.
+- Updated dependencies [f37e7bb]
+- Updated dependencies [4974af9]
+- Updated dependencies [aea0e42]
+- Updated dependencies [8615050]
+- Updated dependencies [309d308]
+  - @paypal/paypal-js@9.7.0
+
+## 9.1.1
+
+### Patch Changes
+
+- b2c3c7a: Simplifies deep compare memoize helpers and adds tests.
+- b9a263a: fix link to the live demo in readme
+- Updated dependencies [6dee5e0]
+- Updated dependencies [3524480]
+- Updated dependencies [bec655c]
+  - @paypal/paypal-js@9.6.0
+
+## 9.1.0
+
+### Minor Changes
+
+- fd0fd4c: Add internal error boundary to PayPalButtons component
+
+### Patch Changes
+
+- ee754a1: clarify PayPal SDK versions in readme files
+- Updated dependencies [a5d2818]
+  - @paypal/paypal-js@9.5.0
+
+## 9.0.2
+
+### Patch Changes
+
+- 68a8bfe: Updated React README.md file to contain V6 React Card Fields documentation.
+- 18fe4c2: Fixes broken README links to storybook examples.
+- 1b44c19: remove unused files and minor doc updates
+- Updated dependencies [10258ca]
+- Updated dependencies [1b44c19]
+  - @paypal/paypal-js@9.4.1
+
+## 9.0.1
+
+### Patch Changes
+
+- 7f66db7: chore(deps): update dependencies, remove unused dependencies, and delete unused files
+- 6ec08d2: Fix react-paypal-js readme to prefer Client ID for SDK instance creation.
+- f717d37: Fixes an issue with the v6 server esm build that prevented useFetchEligibleMethods from being used.
+- Updated dependencies [9b31cad]
+- Updated dependencies [7f66db7]
+- Updated dependencies [8663d7f]
+- Updated dependencies [6ec08d2]
+  - @paypal/paypal-js@9.4.0
+
+## 9.0.0
+
+### Major Changes
+
+- 62bf29b: Updated v6 SDK React error handling
+
+### Minor Changes
+
+- 1bf66b4: Render web components using isHydrated.
+- 62bf29b: Upgrade react-paypal-js Typescript version to v5.3.3 and update build configuration.
+- aa89d81: Updates PayPalProvider with SDK eligibility hydration.
+- 83e4316: Created V6 React Card Field components for each field type
+- ff7fbdb: Updates the V6 rollup config to apply bundle-level use client directive to client bundle.
+- ac3bb9e: Adding error handling to payment session hooks to help merchants identify and resolve when session creation methods throw errors due to missing components.
+- 35f2a0b: Adds PayPal Save Payment Button component.
+- 13f06a8: Removes v6 PayPalProvider default eligibility request and adds useEligibleMethods hook.
+- 62bf29b: Add V6 instance provider and context hook
+- 823a813: Adds 3 static UI components: PayPal Credit One Time Payment, PayPal Credit Save Payment, and PayPal Subscriptions.
+- d663dd3: Refactors SDK Web Component typescript declarations.
+- 3e3f3c2: Adding dataSdkIntegrationSource to the script tag for analytics purpose
+- 7310bfb: Enables using a merchant ID as a prop in the PayPalProvider
+- 99b63b3: Adds PayPal Subscription Payment Session hook.
+- 3483634: Update the README to account for the react-paypal-js v9 release.
+- 62bf29b: Adds 2 methods for client side and server side eligibility methods requests.
+- cd1dc60: Adds rollup plugin copy to include type declaration files in the build.
+- ab6dc9c: Updating PayPalProvider with clientId enhancements
+- 36ff502: Changes the homepage URL to point to V6 storybook.
+
+### Patch Changes
+
+- 62bf29b: Add `<PayPalOneTimePaymentButton>`
+- 0c02589: Created usePayPalCardFieldsSavePaymentSession hook
+- a2541f0: docs: update react storybook link
+- 89ff843: Export v6 session hook argument types and rename some types.
+- 2f0f473: Adding isPending to hook and buttons to allow deferred clientToken
+- 62bf29b: Fixes a build warning log by upgrading typescript-eslint packages from v5 to v6.
+- 62bf29b: Enhancing the Paypal and PayLater hooks to handle redirect and direct app switch presentation modes.
+- 62bf29b: Refactor to use names PayPalCardFieldsProvider and PayPalCardFieldsProviderContext
+- a76de16: Fix useEligibleMethods to correctly trigger new API request when payload changes. Previously, if eligibility data already existed in context, the hook would skip fetching even when a different payload was provided. Now the hook compares the current payload with the stored payload using deep equality to determine if a new request is needed.
+- 00069d9: Passes savePayment prop to the create session method within the useCreatePayPalOneTimePaymentSession hook.
+- da89628: Add PayPalCardFieldsProviderContext Tests
+- 9e81bfc: Revert commit 35b5076e7da9fb252cfa8e33f03fae7be7025980
+- 62bf29b: Add v6 paypal-messages hook and types.
+- 62bf29b: Adds an early resolve to loadCoreSdkScript if a v6 core script already exists.
+- 06ad677: Adds Credit One Time Payment and Credit Save Payment react hooks
+- 62bf29b: Update createOrder call in useVenmoOneTimePaymentSession hook to match usePayLaterOneTimePaymentSession
+- e3ffe7a: Fixes a type error in static UI components using the ButtonProps type.
+- c7d1c3c: Fixes a bug caused by exporting a server only function.
+- 62bf29b: Adding PayLater UI Component
+- 0212046: Checking clientToken to render the PayPalProvider children while rendering the provider
+- 81cbb7f: Integrate useEligibleMethods hook into PayLaterOneTimePaymentButton component to automatically fetch and dispatch eligibility to context. Also fixes React Strict Mode compatibility by resetting lastFetchRef on cleanup.
+- 62bf29b: Refactor paypal provider test utils.
+- 38f520d: Audit and update JSDoc comments for V6 hooks and components. Add missing doc comments for usePayLaterOneTimePaymentSession and useVenmoOneTimePaymentSession, fix inaccurate documentation in useFetchEligibleMethods and usePayPal, and normalize doc style across all payment session hooks and button components.
+- 62bf29b: feat: add v5 storybook to github pages
+- 62bf29b: Update presentation mode options types and integration.
+- 62bf29b: - Default `PayPalProvider` `components` to `["paypal-payments"]`.
+  - Update session hooks to check `loadingStatus` before returning an error for no `sdkInstance`.
+  - `PayPalContext` export was removed since merchants won't need to use that directly.
+  - Check only `window` for `isServer` SSR function.
+- 9155ce6: Implement on and update methods on CardFieldsProvider
+- 64d7760: Adding BCDC UI button component
+- 62bf29b: Created CardFieldsProvider and context for creating and providing Card Fields sessions
+- 62bf29b: Adds v6 venmo ui component.
+- f55c494: Update v6 jsx namespace.
+- 47db663: Fix useEligibleMethods type imports.
+- d13a400: Adding wrapper for bcdc container
+- 62bf29b: Fix lint warnings.
+- 169c977: Ensure the paypal-js dependency is at a minimum of v9.3.0
+- 165895e: Fixing the hook error handling to be simple and generic
+- 62bf29b: Implementing BCDC hook.
+- 62bf29b: Created usePayPalCardFieldsOneTimePaymentSession hook
+- 62bf29b: Remove ssr tests.
+
+## 8.9.2
+
+### Patch Changes
+
+- b41126f: (fix) Proxy props added to Card Fields to prevent stale closure
+- 0575877: Upgrade to package-lock v3 and fix rollup dependency
+- Updated dependencies [6c83cf1]
+- Updated dependencies [0575877]
+- Updated dependencies [9b6eecc]
+  - @paypal/paypal-js@9.0.0
+
+## 8.9.1
+
+### Patch Changes
+
+- 67c5a2a: fix style types on CardField react component
+- Updated dependencies [d3851e4]
+- Updated dependencies [4d51a9a]
+  - @paypal/paypal-js@8.4.0
+
+## 8.9.0
+
+### Minor Changes
+
+- eda47cb: Update card fields import paths and fix readme
+
+## 8.8.3
+
+### Patch Changes
+
+- ebcfbaa: WHAT: Temporary fix for Braintree SDK versioning in React JS SDK. BT SDK version has been upgraded to latest version statically in the React SDK.
+
+  WHY: The BT SDK version is statically typed to an old version in our React SDK. As a short-term fix, we need to upgrade this version to the latest statically.
+
+## 8.8.2
+
+### Patch Changes
+
+- 0176463: added missing style fields to CardField Types
+
+## 8.8.1
+
+### Patch Changes
+
+- 10775ad: minor fixes to release and adding react 19 as peer dependency
+
+## 8.8.0
+
+### Minor Changes
+
+- 471280d: (fix) proxy props to prevent stale closure
+
+## 8.7.0
+
+### Minor Changes
+
+- a83971e: Allows button message amount type to be string
+
+### Patch Changes
+
+- Updated dependencies [a83971e]
+  - @paypal/paypal-js@8.1.2
+
+## 8.6.0
+
+### Minor Changes
+
+- dcd618c: Fixes Button rerendering unnecessarily when Buttons Message params change
+
+### Patch Changes
+
+- 638e8e6: remove .nvmrc and lint-staged.config.js in react-paypal-js
+- 638e8e6: remove the prettier dependency from each packages, update the prettier root version, fixed build error, update note version to 18
+- 543fa08: Add button style borderRadius type
+- Updated dependencies [d36e386]
+- Updated dependencies [638e8e6]
+- Updated dependencies [638e8e6]
+- Updated dependencies [543fa08]
+- Updated dependencies [22f23ab]
+  - @paypal/paypal-js@8.1.1
+
+## 8.5.0
+
+### Minor Changes
+
+- ecc9bc5: Add react-paypal-js to the paypal-js monorepo
+
+### Patch Changes
+
+- ecc9bc5: fixes button rerender issue due to obj in dependency array
+- 12a76c9: set publish access to public
+- cf50c1d: no-op change to re-trigger version packages pr
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [8.4.0](https://github.com/paypal/react-paypal-js/compare/v8.3.0...v8.4.0) (2024-06-10)
+
+### Features
+
+- updates PayPalButtons to add message option ([ee7cf02](https://github.com/paypal/react-paypal-js/commit/ee7cf029ad1d15d51aa38b2476f8c66bbcd511da))
+- updates PayPalButtons to add message option ([8213385](https://github.com/paypal/react-paypal-js/commit/8213385f64d814cf50ed233a2f8201fc2238b84a))
+
+### Bug Fixes
+
+- add individual story and cardfieldsprovider ([6c942c7](https://github.com/paypal/react-paypal-js/commit/6c942c75a58c8745236f261777c47ff1a1e97553))
+- prettier ([8fa2294](https://github.com/paypal/react-paypal-js/commit/8fa2294eb27cf958da44507a7c6a9218f006fbe3))
+- remove inputEvents and style for form component ([3306470](https://github.com/paypal/react-paypal-js/commit/3306470c3d1818a54bf74484bd58d883952636cb))
+- remove options from form component ([ffb7af8](https://github.com/paypal/react-paypal-js/commit/ffb7af8639c1f9452261499f1d0af456a5ec9e40))
+- skeleton for individual stories ([73676e6](https://github.com/paypal/react-paypal-js/commit/73676e6081d24e33485aad1268a7f6b45953bc4f))
+- typo correction in readme ([557f591](https://github.com/paypal/react-paypal-js/commit/557f591c6980f7ddf5eba38fe46c6b7bb713391f))
+- wip relative imports not working ([913dd15](https://github.com/paypal/react-paypal-js/commit/913dd153d73b6f17710cee20c9c17303cf4e5ebd))
+
+## [8.3.0](https://github.com/paypal/react-paypal-js/compare/v8.2.0...v8.3.0) (2024-04-29)
+
+### Features
+
+- add cardfields form component ([634e6cd](https://github.com/paypal/react-paypal-js/commit/634e6cdfc4c3deb7d5b4cd903e196bf444bed9f4))
+
+### Bug Fixes
+
+- prettier format ([3e03c3b](https://github.com/paypal/react-paypal-js/commit/3e03c3b7c34781ab98dbc624bac42f56c1b70cac))
+- rerender error fixed ([161fea6](https://github.com/paypal/react-paypal-js/commit/161fea66574f351eeb1b34f5d96b5f7014e0c72d))
+
+## [8.2.0](https://github.com/paypal/react-paypal-js/compare/v8.1.4...v8.2.0) (2024-03-20)
+
+### Features
+
+- add DATA_JS_SDK_LIBRARY to constants ([aa1b771](https://github.com/paypal/react-paypal-js/commit/aa1b771d85fa75083ad152f9d9b55d9c46ae051f))
+- add js library to options ([acc5123](https://github.com/paypal/react-paypal-js/commit/acc512371460da4b7d2f59ba10c69034f7ecef45))
+- hardcode js library ([95a29fa](https://github.com/paypal/react-paypal-js/commit/95a29fae3895042eca2b55f33a98a0d85ed97eae))
+- rename constant ([1d027b6](https://github.com/paypal/react-paypal-js/commit/1d027b6b93d23309a4d6966f998e320fcf7c94e5))
+
+### Bug Fixes
+
+- alphabetize constants ([0d9b495](https://github.com/paypal/react-paypal-js/commit/0d9b495a15e2fd8e923bc55237bb6ba0c69cd11e))
+- enforce values ([faa6278](https://github.com/paypal/react-paypal-js/commit/faa6278d1ad530658999c21be36f24fa1322d8e6))
+
+### [8.1.4](https://github.com/paypal/react-paypal-js/compare/v8.1.3...v8.1.4) (2024-02-28)
+
+### Bug Fixes
+
+- failing typecheck ([#408](https://github.com/paypal/react-paypal-js/issues/408)) ([df8f63b](https://github.com/paypal/react-paypal-js/commit/df8f63b05585c51a7eef9d9296bdcb76e13fa4a8))
+
+### [8.1.3](https://github.com/paypal/react-paypal-js/compare/v8.1.2...v8.1.3) (2023-08-16)
+
+### [8.1.2](https://github.com/paypal/react-paypal-js/compare/v8.1.1...v8.1.2) (2023-08-16)
+
+### Bug Fixes
+
+- allow users to change data-sdk-integration-source ([#378](https://github.com/paypal/react-paypal-js/issues/378)) ([0feef3e](https://github.com/paypal/react-paypal-js/commit/0feef3e834fb2b9aaf23029855447715915bd1b2))
+
+### [8.1.1](https://github.com/paypal/react-paypal-js/compare/v8.1.0...v8.1.1) (2023-07-28)
+
+## [8.1.0](https://github.com/paypal/react-paypal-js/compare/v8.0.0...v8.1.0) (2023-07-03)
+
+### Features
+
+- add loadingStatusErrorMessage to state ([#366](https://github.com/paypal/react-paypal-js/issues/366)) ([e1b9068](https://github.com/paypal/react-paypal-js/commit/e1b9068931c0fb832d884a0879d22deeca8304c2))
+
+## [8.0.0](https://github.com/paypal/react-paypal-js/compare/v7.8.3...v8.0.0) (2023-06-12)
+
+### ⚠ BREAKING CHANGES
+
+- this is a breaking change for PayPalScriptProvider options.
+
+### Features
+
+- use camelCase for PayPalScriptProvider options ([#360](https://github.com/paypal/react-paypal-js/issues/360)) ([168764e](https://github.com/paypal/react-paypal-js/commit/168764e4fb89be8717f256d4f9817bdf8e0a6eed))
+
+### [7.8.3](https://github.com/paypal/react-paypal-js/compare/v7.8.2...v7.8.3) (2023-03-27)
+
+### [7.8.2](https://github.com/paypal/react-paypal-js/compare/v7.8.1...v7.8.2) (2022-11-30)
+
+### [7.8.1](https://github.com/paypal/react-paypal-js/compare/v7.8.0...v7.8.1) (2022-05-27)
+
+## [7.8.0](https://github.com/paypal/react-paypal-js/compare/v7.7.0...v7.8.0) (2022-05-17)
+
+### Features
+
+- **hostedFields:** add support for installments ([#271](https://github.com/paypal/react-paypal-js/issues/271)) ([c5e9670](https://github.com/paypal/react-paypal-js/commit/c5e967067517710765692c73c009d43ec60fb914))
+
+## [7.7.0](https://github.com/paypal/react-paypal-js/compare/v7.6.2...v7.7.0) (2022-05-10)
+
+### Features
+
+- **braintree:** add merchantAccountId prop ([#269](https://github.com/paypal/react-paypal-js/issues/269)) ([9ee701c](https://github.com/paypal/react-paypal-js/commit/9ee701caf3b2926e126a28d7a6a00c28912e7cf3))
+
+### [7.6.2](https://github.com/paypal/react-paypal-js/compare/v7.6.1...v7.6.2) (2022-05-09)
+
+### Bug Fixes
+
+- revert "fix(braintree): pass merchant-id through to session ([#265](https://github.com/paypal/react-paypal-js/issues/265))" ([#267](https://github.com/paypal/react-paypal-js/issues/267)) ([44b56b2](https://github.com/paypal/react-paypal-js/commit/44b56b2c9a799aad4108ba0fa0203bf86b359eb0))
+
+### [7.6.1](https://github.com/paypal/react-paypal-js/compare/v7.6.0...v7.6.1) (2022-05-09)
+
+### Bug Fixes
+
+- **braintree:** pass merchant-id through to checkout session ([#265](https://github.com/paypal/react-paypal-js/issues/265)) ([1844fd5](https://github.com/paypal/react-paypal-js/commit/1844fd588c55de028656779e6ea3327f71b15d10))
+
+## [7.6.0](https://github.com/paypal/react-paypal-js/compare/v7.5.1...v7.6.0) (2022-02-01)
+
+### Features
+
+- **braintree:** add optional prop for braintree namespace ([#238](https://github.com/paypal/react-paypal-js/issues/238)) ([8deab76](https://github.com/paypal/react-paypal-js/commit/8deab76564181c5f2b1a08babf9d4316cae5720d))
+- **hostedFields:** support deeply nested children ([#240](https://github.com/paypal/react-paypal-js/issues/240)) ([f5fa95d](https://github.com/paypal/react-paypal-js/commit/f5fa95db3cfe1c8797e6f1eccb4c0abfb1355aaf))
+
+### [7.5.1](https://github.com/paypal/react-paypal-js/compare/v7.5.0...v7.5.1) (2022-01-14)
+
+### Bug Fixes
+
+- add type for Braintree billing agreement option ([#234](https://github.com/paypal/react-paypal-js/issues/234)) ([ddaced2](https://github.com/paypal/react-paypal-js/commit/ddaced241a6a243cbb51689619918ab93710233e))
+- **braintree:** support Braintree integrations using tokenization keys ([#216](https://github.com/paypal/react-paypal-js/issues/216)) ([3985a13](https://github.com/paypal/react-paypal-js/commit/3985a1309bb6c98f15584dc0ca33fe09c7207910))
+
+## [7.5.0](https://github.com/paypal/react-paypal-js/compare/v7.4.2...v7.5.0) (2021-11-29)
+
+### Features
+
+- log loading errors for the JS SDK script ([#212](https://github.com/paypal/react-paypal-js/issues/212)) ([77973f0](https://github.com/paypal/react-paypal-js/commit/77973f0739e740ecbc4155cd79f733b9e2824484))
+
+### [7.4.2](https://github.com/paypal/react-paypal-js/compare/v7.4.1...v7.4.2) (2021-10-15)
+
+### Bug Fixes
+
+- add `createBillingAgreement` support for BraintreePayPalButtons ([#195](https://github.com/paypal/react-paypal-js/issues/195)) ([b4086ab](https://github.com/paypal/react-paypal-js/commit/b4086ab511565b1a904ceb241779c64f8adab36b))
+
+### [7.4.1](https://github.com/paypal/react-paypal-js/compare/v7.4.0...v7.4.1) (2021-10-09)
+
+### Bug Fixes
+
+- **types:** rename back to DISPATCH_ACTION ([#192](https://github.com/paypal/react-paypal-js/issues/192)) ([2b8f14a](https://github.com/paypal/react-paypal-js/commit/2b8f14ad41a6be3f461fe73b9661c92bd012df2a))
+
+## [7.4.0](https://github.com/paypal/react-paypal-js/compare/v7.3.3...v7.4.0) (2021-10-08)
+
+### Features
+
+- **hosted-fields:** add support for hosted-fields ([#160](https://github.com/paypal/react-paypal-js/issues/160)) ([e025d9a](https://github.com/paypal/react-paypal-js/commit/e025d9a1b45d43ad4b79e419188d59907b3cf1b8))
+- update Marks to support the children prop ([#155](https://github.com/paypal/react-paypal-js/issues/155)) ([6aebf98](https://github.com/paypal/react-paypal-js/commit/6aebf98b2592ed7ac68d6b232ab2fa4121dd114e))
+
+### Bug Fixes
+
+- **types:** standardize types for children ([#157](https://github.com/paypal/react-paypal-js/issues/157)) ([cc956be](https://github.com/paypal/react-paypal-js/commit/cc956beb1323a7516e30174b7d7fd20c9cd60e13))
+- update Marks to rerender when fundingSource changes ([#154](https://github.com/paypal/react-paypal-js/issues/154)) ([f7b4a25](https://github.com/paypal/react-paypal-js/commit/f7b4a251b01e7777948fda846fe0b55d348ec60a))
+
+### [7.3.3](https://github.com/paypal/react-paypal-js/compare/v7.3.2...v7.3.3) (2021-08-31)
+
+### Bug Fixes
+
+- remove babel polyfill for typeof symbol ([d73fe72](https://github.com/paypal/react-paypal-js/commit/d73fe72e0bfa482226df8d38371dec969324583d))
+- update error handling logic for BraintreePayPalButtons ([1a1c73d](https://github.com/paypal/react-paypal-js/commit/1a1c73dfb15ff39452034d35a786938e5630aa5d))
+
+### [7.3.2](https://github.com/paypal/react-paypal-js/compare/v7.3.1...v7.3.2) (2021-08-27)
+
+### Bug Fixes
+
+- **buttons:** catch errors thrown during button initialization ([f60176e](https://github.com/paypal/react-paypal-js/commit/f60176e50fdbfab317bcbb08fdaac890a57ba615))
+- remove async/await usage to avoid babel polyfill ([#150](https://github.com/paypal/react-paypal-js/issues/150)) ([ecaf084](https://github.com/paypal/react-paypal-js/commit/ecaf08402f17bf92de527bb4d4d714c5007ba5cd))
+
+### [7.3.1](https://github.com/paypal/react-paypal-js/compare/v7.3.0...v7.3.1) (2021-08-26)
+
+### Bug Fixes
+
+- **types:** export all public types ([#147](https://github.com/paypal/react-paypal-js/issues/147)) ([9e8c39b](https://github.com/paypal/react-paypal-js/commit/9e8c39b773fa076c1ffabb3c259ca87f25c55141))
+
+## [7.3.0](https://github.com/paypal/react-paypal-js/compare/v7.2.1...v7.3.0) (2021-08-25)
+
+### Features
+
+- **braintree:** add new <BraintreePayPalButtons /> component ([#140](https://github.com/paypal/react-paypal-js/issues/140)) ([a2c7741](https://github.com/paypal/react-paypal-js/commit/a2c774168fbc5ae7a610df384feca684737d7fba))
+
+### Bug Fixes
+
+- prevent numeric overflow with hashStr function ([#141](https://github.com/paypal/react-paypal-js/issues/141)) ([9914f60](https://github.com/paypal/react-paypal-js/commit/9914f60701c19dcde2fb42ad8791265aee37e34c))
+
+### [7.2.1](https://github.com/paypal/react-paypal-js/compare/v7.2.0...v7.2.1) (2021-07-28)
+
+### Bug Fixes
+
+- avoid reloading the script when options have not changed ([#135](https://github.com/paypal/react-paypal-js/issues/135)) ([0765e16](https://github.com/paypal/react-paypal-js/commit/0765e1600322bd511ddfc61b427d14b356d3f1b8))
+
+## [7.2.0](https://github.com/paypal/react-paypal-js/compare/v7.1.2...v7.2.0) (2021-07-11)
+
+### Features
+
+- more robust package publishing ([#130](https://github.com/paypal/react-paypal-js/issues/130)) ([e5caf02](https://github.com/paypal/react-paypal-js/commit/e5caf02ece24b22f50f7f82b40203358746b5cc2))
+
+### Bug Fixes
+
+- **release:** do not publish types from storybook ([#131](https://github.com/paypal/react-paypal-js/issues/131)) ([6534d59](https://github.com/paypal/react-paypal-js/commit/6534d595033dc9960b1fe6939a31482e8f22fdbd))
+- increase opacity for disabled button ([d1ac1d2](https://github.com/paypal/react-paypal-js/commit/d1ac1d28d729774900dd757e0829812ab4cbc4f9))
+- type declarations don’t depend on internal typings ([#129](https://github.com/paypal/react-paypal-js/issues/129)) ([76a3b9f](https://github.com/paypal/react-paypal-js/commit/76a3b9f72b4893aa7c2210e0d77711820a875bef))
+
+### [7.1.2](https://github.com/paypal/react-paypal-js/compare/v7.1.1...v7.1.2) (2021-07-05)
+
+### [7.1.1](https://github.com/paypal/react-paypal-js/compare/v7.1.0...v7.1.1) (2021-07-05)
+
+### Bug Fixes
+
+- **types:** export the ScriptProviderProps interface ([e97e3d0](https://github.com/paypal/react-paypal-js/commit/e97e3d0b0cc404e807f7f9e1173ec532592fc8cf))
+- **types:** update resetOptions to support PayPalScriptOptions type ([236c3cf](https://github.com/paypal/react-paypal-js/commit/236c3cff9be53959b24725718a8b0a999e17f02c))
+
+## [7.1.0](https://github.com/paypal/react-paypal-js/compare/v7.0.0...v7.1.0) (2021-06-27)
+
+### Features
+
+- **storybook:** add support for overriding js sdk query params ([#121](https://github.com/paypal/react-paypal-js/issues/121)) ([14d62d0](https://github.com/paypal/react-paypal-js/commit/14d62d04b3be17312b8478e815ab826434dfc6fb))
+
+## [7.0.0](https://github.com/paypal/react-paypal-js/compare/v6.0.2...v7.0.0) (2021-06-04)
+
+### ⚠ BREAKING CHANGES
+
+- new file names for built files in dist folder.
+
+### Features
+
+- improve dist folder structure ([b032f77](https://github.com/paypal/react-paypal-js/commit/b032f77ceeb0181123741c0b3422ac19af94131d))
+
+### [6.0.2](https://github.com/paypal/react-paypal-js/compare/v6.0.1...v6.0.2) (2021-06-04)
+
+### [6.0.1](https://github.com/paypal/react-paypal-js/compare/v6.0.0...v6.0.1) (2021-05-16)
+
+### Bug Fixes
+
+- **types:** improve type for ScriptLoadingState ([#113](https://github.com/paypal/react-paypal-js/issues/113)) ([402afe4](https://github.com/paypal/react-paypal-js/commit/402afe4f54b58bd5dc1d097e7c8d64e12fc852ff))
+
+## [6.0.0](https://github.com/paypal/react-paypal-js/compare/v5.2.0...v6.0.0) (2021-04-12)
+
+### ⚠ BREAKING CHANGES
+
+- forceReRender prop now accepts an array.
+
+### Features
+
+- update forceReRender to be an array ([#102](https://github.com/paypal/react-paypal-js/issues/102)) ([c41ee40](https://github.com/paypal/react-paypal-js/commit/c41ee40e6899f86f2300285c4826203458f457e5))
+
+## [5.2.0](https://github.com/paypal/react-paypal-js/compare/v5.1.2...v5.2.0) (2021-04-05)
+
+### Features
+
+- add deferLoading prop to control sdk script loading ([2cf3904](https://github.com/paypal/react-paypal-js/commit/2cf3904ebe21edcd8ffd14dcd67b553ad6ced6c8))
+
+### [5.1.2](https://github.com/paypal/react-paypal-js/compare/v5.1.1...v5.1.2) (2021-04-02)
+
+### Bug Fixes
+
+- prevent script provider from loading more than one sdk script ([8d5dbb7](https://github.com/paypal/react-paypal-js/commit/8d5dbb709082bec45835336a0e04312fcc9c5e1e))
+
+### [5.1.1](https://github.com/paypal/react-paypal-js/compare/v5.1.0...v5.1.1) (2021-03-30)
+
+## [5.1.0](https://github.com/paypal/react-paypal-js/compare/v5.0.1...v5.1.0) (2021-03-22)
+
+### Features
+
+- add support for custom namespaces ([8d3cd26](https://github.com/paypal/react-paypal-js/commit/8d3cd2612f9176dc266b4e0633827871a6ce5457))
+- support rendering custom content when ineligible ([c590e90](https://github.com/paypal/react-paypal-js/commit/c590e90dbead2539b3af6602a63f652aa6fcd7d8))
+
+### Bug Fixes
+
+- ignore errors related to enable/disable actions ([f62eda7](https://github.com/paypal/react-paypal-js/commit/f62eda76b9ac00cadcce2a41b7fe14e80b9083a6))
+- ignore errors when cleaning up buttons component ([5a3e6f1](https://github.com/paypal/react-paypal-js/commit/5a3e6f15b81d37688cc40e8101c70ec3b07970ab))
+- use error boundaries approach for all components ([56f1b7e](https://github.com/paypal/react-paypal-js/commit/56f1b7e7486097701655e08be92b23de3135c863))

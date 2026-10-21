@@ -18,10 +18,10 @@ export const NewRequestView: React.FC<NewRequestViewProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const presets = [
-    { label: 'Normal $10 Ads Basic', text: 'Create a $10 Ads Basic order' },
-    { label: '2x Ads Pro ($50 Limit Cap)', text: 'Buy 2 pro ads campaigns' },
-    { label: 'Over-Limit Violation ($250)', text: 'Purchase enterprise addon tier for 1 client' },
-    { label: 'Ambiguous Query', text: 'Please buy something for me' },
+    { label: 'Normal $10 Ads Basic (Allowed)', text: 'Create a $10 Ads Basic order' },
+    { label: '2x Ads Pro ($50 Max Limit Allowed)', text: 'Buy 2 pro ads campaigns' },
+    { label: 'Over-Limit Violation ($250 Denied)', text: 'Purchase enterprise addon tier for 1 client' },
+    { label: 'Ambiguous Intent Request', text: 'Please buy something for me' },
   ];
 
   const handleParseAi = async (textToParse: string) => {
@@ -73,45 +73,46 @@ export const NewRequestView: React.FC<NewRequestViewProps> = ({
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Top Banner */}
       <div>
-        <h2 className="text-2xl font-bold text-white tracking-tight">
-          Guarded AI Purchase Proposal
+        <h2 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
+          <Zap className="w-6 h-6 text-[#FFC439]" />
+          <span>Guarded AI Purchase Proposal</span>
         </h2>
-        <p className="text-sm text-slate-400">
-          AI agents propose purchases from a server-owned catalog. Pricing is strictly resolved on the server; deterministic merchant policy enforces transaction limits and sandbox safety.
+        <p className="text-sm text-slate-300">
+          AI agents parse human intent into a server-owned catalog ID. Pricing is strictly authoritative on the server (zero client price trust); merchant deterministic policy enforces transaction caps and safe Sandbox operations.
         </p>
       </div>
 
       {/* Input Card */}
-      <div className="glass-panel p-6 rounded-2xl border-white/10 space-y-4">
-        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">
-          Natural Language Prompt or Agent Request
+      <div className="glass-panel p-6 rounded-xl border-[#1E2E50] space-y-4">
+        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">
+          Natural Language Prompt or Agent Command
         </label>
 
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <input
             type="text"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleParseAi(prompt)}
             placeholder="e.g. 'Create a $10 Ads Basic order' or 'Buy 2 Ads Pro campaigns'"
-            className="flex-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-cyan-400 font-mono"
+            className="flex-1 bg-[#080D1A] border border-[#1E2E50] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#0070BA] font-mono"
           />
           <button
             onClick={() => handleParseAi(prompt)}
             disabled={loading}
-            className="btn btn-primary px-6"
+            className="btn btn-primary px-6 whitespace-nowrap"
           >
-            <Zap className="w-4 h-4" />
-            <span>Parse with AI</span>
+            <Zap className="w-4 h-4 text-[#FFC439]" />
+            <span>Parse & Evaluate</span>
           </button>
         </div>
 
         {/* Preset Chips */}
-        <div className="flex flex-wrap items-center gap-2 pt-2">
-          <span className="text-xs text-slate-500 font-medium mr-1">Demo Presets:</span>
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          <span className="text-xs text-slate-400 font-medium mr-1">Quick Presets:</span>
           {presets.map((p, idx) => (
             <button
               key={idx}
@@ -119,7 +120,7 @@ export const NewRequestView: React.FC<NewRequestViewProps> = ({
                 setPrompt(p.text);
                 handleParseAi(p.text);
               }}
-              className="px-3 py-1 rounded-full text-xs font-medium bg-white/5 border border-white/10 text-slate-300 hover:bg-cyan-500/10 hover:border-cyan-400/40 hover:text-cyan-300 transition-all"
+              className="px-3 py-1 rounded-full text-xs font-medium bg-[#0E172C] border border-[#1E2E50] text-slate-300 hover:bg-[#16243F] hover:border-[#0070BA] hover:text-white transition-all"
             >
               {p.label}
             </button>
@@ -130,10 +131,10 @@ export const NewRequestView: React.FC<NewRequestViewProps> = ({
       {/* Server Catalog Grid */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">
-            Authoritative Server-Owned Catalog (Zero Client Price Trust)
+          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            Authoritative Server Catalog (Zero Client Price Trust)
           </h3>
-          <span className="text-xs text-cyan-400">Strictly Enforced Server-Side</span>
+          <span className="text-xs text-[#38BDF8] font-mono">Server-Enforced</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
@@ -146,16 +147,16 @@ export const NewRequestView: React.FC<NewRequestViewProps> = ({
                   setPrompt(`Purchase 1 ${item.name}`);
                   handleParseAi(`Purchase 1 ${item.name}`);
                 }}
-                className={`glass-panel p-4 rounded-xl cursor-pointer border transition-all ${
+                className={`p-4 rounded-xl cursor-pointer border transition-all ${
                   isSelected
-                    ? 'border-cyan-400 bg-cyan-950/30 shadow-[0_0_15px_rgba(0,207,222,0.2)]'
-                    : 'border-white/5 hover:border-white/20'
+                    ? 'border-[#0070BA] bg-[#121E36] shadow-[0_0_12px_rgba(0,112,186,0.3)]'
+                    : 'bg-[#0E172C] border-[#1E2E50] hover:border-[#2D4373]'
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-mono text-slate-400">{item.id}</span>
-                  <span className="text-xs font-bold px-2 py-0.5 rounded bg-black/40 text-emerald-400">
-                    {item.currency} {item.unitPrice.toFixed(2)}
+                  <span className="text-[11px] font-mono text-slate-400">{item.id}</span>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded bg-[#080D1A] text-emerald-400 border border-emerald-900/40">
+                    ${item.unitPrice.toFixed(2)}
                   </span>
                 </div>
                 <h4 className="font-bold text-sm text-white">{item.name}</h4>
@@ -168,21 +169,21 @@ export const NewRequestView: React.FC<NewRequestViewProps> = ({
 
       {/* AI Intent & Policy Evaluation Result */}
       {aiAnalysis && (
-        <div className="glass-panel p-6 rounded-2xl border-white/10 space-y-6 animate-in fade-in duration-300">
-          <div className="flex items-center justify-between border-b border-white/10 pb-4">
+        <div className="glass-panel p-6 rounded-xl border-[#1E2E50] space-y-5 animate-in fade-in duration-200">
+          <div className="flex items-center justify-between border-b border-[#1E2E50] pb-3">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-lg text-white">AI Constrained Parsing Result</span>
-              <span className="badge badge-code-fact">Intent Mapped</span>
+              <span className="font-bold text-base text-white">Policy Engine Evaluation</span>
+              <span className="badge badge-code-fact">Catalog Mapped</span>
             </div>
             {aiAnalysis.policyResult && (
               <span
-                className={`badge ${
+                className={`badge text-xs ${
                   aiAnalysis.policyResult.allowed
-                    ? 'bg-emerald-950/80 text-emerald-300 border-emerald-500/40'
-                    : 'bg-rose-950/80 text-rose-300 border-rose-500/40'
+                    ? 'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                    : 'bg-rose-950 text-rose-300 border border-rose-800'
                 }`}
               >
-                {aiAnalysis.policyResult.allowed ? 'POLICY ALLOWED' : 'POLICY DENIED'}
+                {aiAnalysis.policyResult.allowed ? 'POLICY ALLOWED' : 'POLICY REJECTED'}
               </span>
             )}
           </div>
@@ -192,7 +193,7 @@ export const NewRequestView: React.FC<NewRequestViewProps> = ({
             <div className="p-4 rounded-xl bg-amber-950/30 border border-amber-500/30 flex items-start gap-3 text-amber-300 text-sm">
               <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
               <div>
-                <strong className="block font-semibold">Clarification Required from User:</strong>
+                <strong className="block font-semibold">User Clarification Required:</strong>
                 <span>{aiAnalysis.parsedIntent.clarificationQuestion}</span>
               </div>
             </div>
@@ -203,10 +204,10 @@ export const NewRequestView: React.FC<NewRequestViewProps> = ({
                 <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                   Extracted Proposal Parameters
                 </h4>
-                <div className="space-y-2 bg-black/30 p-4 rounded-xl text-sm font-mono">
+                <div className="space-y-2 bg-[#080D1A] p-4 rounded-xl text-xs font-mono border border-[#1E2E50]">
                   <div className="flex justify-between">
                     <span className="text-slate-400">Target Catalog ID:</span>
-                    <strong className="text-cyan-400">{aiAnalysis.parsedIntent.catalogId}</strong>
+                    <strong className="text-[#38BDF8]">{aiAnalysis.parsedIntent.catalogId}</strong>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">Item Name:</span>
@@ -216,25 +217,25 @@ export const NewRequestView: React.FC<NewRequestViewProps> = ({
                     <span className="text-slate-400">Quantity:</span>
                     <span className="text-white">{aiAnalysis.parsedIntent.quantity}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Server Authoritative Total:</span>
-                    <strong className="text-emerald-400 text-base">
-                      {aiAnalysis.catalogItem?.currency} {aiAnalysis.totalAmount.toFixed(2)}
+                  <div className="flex justify-between pt-1 border-t border-[#1E2E50]">
+                    <span className="text-slate-400">Authoritative Total:</span>
+                    <strong className="text-emerald-400 text-sm">
+                      ${aiAnalysis.totalAmount.toFixed(2)} {aiAnalysis.catalogItem?.currency}
                     </strong>
                   </div>
                 </div>
 
                 {/* Price Tampering Test Checkbox */}
-                <div className="pt-2">
-                  <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-400 hover:text-white">
+                <div className="pt-1">
+                  <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-300 hover:text-white">
                     <input
                       type="checkbox"
                       checked={tamperPrice}
                       onChange={(e) => setTamperPrice(e.target.checked)}
-                      className="rounded bg-black/40 border-white/20 text-cyan-500 focus:ring-0"
+                      className="rounded bg-[#080D1A] border-[#1E2E50] text-[#0070BA]"
                     />
                     <span className="text-amber-400 font-medium">
-                      Simulate Client/AI Price Tampering Attack (Override price to $1.00)
+                      Simulate Client Price Tampering (Inject $1.00 override to test rejection)
                     </span>
                   </label>
                 </div>
@@ -244,9 +245,9 @@ export const NewRequestView: React.FC<NewRequestViewProps> = ({
               {aiAnalysis.policyResult && (
                 <div className="space-y-3">
                   <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                    Deterministic Merchant Policy Gate
+                    Deterministic Policy Rules Breakdown
                   </h4>
-                  <div className="space-y-2 bg-black/30 p-4 rounded-xl text-xs">
+                  <div className="space-y-2 bg-[#080D1A] p-4 rounded-xl text-xs border border-[#1E2E50]">
                     {Object.entries(aiAnalysis.policyResult.evaluatedRules).map(
                       ([ruleKey, rule]: [string, any]) => (
                         <div key={ruleKey} className="flex items-start gap-2">
@@ -270,22 +271,22 @@ export const NewRequestView: React.FC<NewRequestViewProps> = ({
 
           {/* Action Footer */}
           {!aiAnalysis.parsedIntent?.ambiguous && (
-            <div className="flex items-center justify-between pt-4 border-t border-white/10">
-              <div className="text-xs text-slate-400">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-[#1E2E50]">
+              <div className="text-xs text-slate-400 text-center sm:text-left">
                 {aiAnalysis.policyResult?.allowed
-                  ? 'Policy gate validated. Ready to record in SQLite ledger.'
-                  : 'Proposal will be recorded as DENIED in ledger for audit logging.'}
+                  ? 'Policy checks passed. Ready to save to SQLite ledger and proceed to approval.'
+                  : 'Proposal will be logged as DENIED in ledger for compliance audit trail.'}
               </div>
               <button
                 onClick={handleSubmitProposal}
                 disabled={loading}
-                className={`btn ${aiAnalysis.policyResult?.allowed ? 'btn-primary' : 'btn-danger'}`}
+                className={`w-full sm:w-auto ${aiAnalysis.policyResult?.allowed ? 'btn-paypal' : 'btn btn-danger'}`}
               >
                 <ShoppingBag className="w-4 h-4" />
                 <span>
                   {aiAnalysis.policyResult?.allowed
-                    ? 'Submit Guarded Proposal'
-                    : 'Submit (Will Be Denied by Policy)'}
+                    ? 'Propose Purchase Order'
+                    : 'Submit Over-Limit Proposal (Will Be Denied)'}
                 </span>
               </button>
             </div>

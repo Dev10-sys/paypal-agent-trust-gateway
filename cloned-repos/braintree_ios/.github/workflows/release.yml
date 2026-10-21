@@ -1,0 +1,237 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release"
+        required: true
+jobs:
+  unit_tests:
+    name: Unit Tests
+    runs-on: macos-15-xlarge
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Xcode 16.4.0
+        run: sudo xcode-select -switch /Applications/Xcode_16.4.0.app
+
+      - name: Install Package dependencies
+        run: swift package resolve
+
+      - name: Install CocoaPod dependencies
+        run: pod install
+
+      - name: Run Unit Tests
+        run: set -o pipefail && xcodebuild -workspace 'Braintree.xcworkspace' -sdk 'iphonesimulator' -configuration 'Debug' -scheme 'UnitTests' -destination 'name=iPhone 16 Pro,OS=18.5,platform=iOS Simulator' -derivedDataPath DerivedData test | ./Pods/xcbeautify/xcbeautify
+
+  release:
+    name: Release
+    needs: [unit_tests]
+    runs-on: macos-15-xlarge
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_PAT }}
+
+      - name: Validate version input
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+        run: |
+          set -euo pipefail
+
+          # Validate version format: x.x.x or x.x.x-betax (e.g., 5.0.0, 5.0.0-beta1)
+          # Uses bash regex to avoid a grep subprocess and (0|[1-9][0-9]*) to prevent leading zeros.
+          PATTERN='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-beta[0-9]+)?$'
+          if ! [[ "${INPUT_VERSION}" =~ $PATTERN ]]; then
+            echo "::error::Invalid version format: ${INPUT_VERSION}"
+            echo "::error::Version must be x.x.x or x.x.x-betax (e.g., 5.0.0 or 5.0.0-beta1)"
+            exit 1
+          fi
+
+          # Check length to prevent excessively long inputs
+          if [ ${#INPUT_VERSION} -gt 50 ]; then
+            echo "::error::Version string exceeds maximum length of 50 characters"
+            exit 1
+          fi
+
+          # Store validated version for use in subsequent steps
+          echo "RELEASE_VERSION=${INPUT_VERSION}" >> "$GITHUB_ENV"
+          echo "Version validated: ${INPUT_VERSION}"
+
+      - name: Use Xcode 16.4.0
+        run: sudo xcode-select -switch /Applications/Xcode_16.4.0.app
+
+      - name: Check for unreleased section in changelog
+        run: grep "## unreleased" CHANGELOG.md || (echo "::error::No unreleased section found in CHANGELOG"; exit 1)
+
+      - name: Set git username and email
+        run: |
+          set -euo pipefail
+          git config user.name braintreeps
+          git config user.email code@getbraintree.com
+
+      - name: Remove SPMTest app to prevent Carthage timeout
+        run: |
+          set -euo pipefail
+          rm -rf SampleApps/SPMTest
+          git add SampleApps/SPMTest
+          git commit -m 'Remove SPMTest app to avoid Carthage timeout'
+
+      - name: Update version
+        run: |
+          set -euo pipefail
+          today=$(date +'%Y-%m-%d')
+          sed -i '' 's/## unreleased.*/## '"${RELEASE_VERSION}"' ('"$today"')/' CHANGELOG.md
+          sed -i '' 's/\(s\.version *= *\).*/\1"'"${RELEASE_VERSION}"'\"/' Braintree.podspec
+          sed -i '' 's/braintreeSDKVersion: String =.*/braintreeSDKVersion: String = "'"${RELEASE_VERSION}"'"/' Sources/BraintreeCore/BTCoreConstants.swift
+          plutil -replace CFBundleVersion -string "${RELEASE_VERSION}" -- 'Demo/Application/Supporting Files/Braintree-Demo-Info.plist'
+          plutil -replace CFBundleShortVersionString -string "${RELEASE_VERSION}" -- 'Demo/Application/Supporting Files/Braintree-Demo-Info.plist'
+          plutil -replace CFBundleVersion -string "${RELEASE_VERSION}" -- 'Sources/BraintreeCore/Info.plist'
+          plutil -replace CFBundleShortVersionString -string "${RELEASE_VERSION}" -- 'Sources/BraintreeCore/Info.plist'
+
+          git add .
+          git commit -m "Bump version to ${RELEASE_VERSION}"
+          git tag "${RELEASE_VERSION}" -a -m "Release ${RELEASE_VERSION}"
+
+      - name: Restore SPMTest app for development purposes
+        run: |
+          set -euo pipefail
+          git revert $(git rev-parse HEAD^1) --no-edit
+      
+      - name: Push commits and tag
+        run: git push origin HEAD "${RELEASE_VERSION}"
+
+      - name: Save changelog entries to a file
+        run: |
+          set -euo pipefail
+          sed -e '1,/##/d' -e '/##/,$d' CHANGELOG.md > changelog_entries.md
+
+      - name: Create GitHub release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.RELEASE_VERSION }}
+          release_name: ${{ env.RELEASE_VERSION }}
+          body_path: changelog_entries.md
+          draft: false
+          prerelease: false
+
+      - name: Create Carthage pre-built xcframeworks
+        run: |
+          set -euo pipefail
+          rm -rf SampleApps/SPMTest
+          rm -rf Carthage
+          carthage build --no-skip-current --use-xcframeworks
+          rm -rf Carthage/Build/BraintreeTestShared.xcframework
+          zip -r Braintree.xcframework.zip Carthage
+          git checkout SampleApps/SPMTest
+      - name: Upload Carthage pre-built xcframeworks to GitHub release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: Braintree.xcframework.zip
+          asset_name: Braintree.xcframework.zip
+          asset_content_type: application/zip
+
+      - name: Create static pre-built xcframeworks
+        run: |
+          set -euo pipefail
+          # 1) Set Build Setting MACH_O type
+          sed -i '' '/buildSettings = {/a\
+            MACH_O_TYPE = staticlib;' Braintree.xcodeproj/project.pbxproj
+
+          # 2) Define all Schemes to build
+          SCHEMES=("BraintreeAmericanExpress" "BraintreeApplePay" "BraintreeCard" "BraintreeCore" "BraintreeDataCollector" "BraintreeLocalPayment" "BraintreePayPal" "BraintreePayPalMessaging" "BraintreeSEPADirectDebit" "BraintreeShopperInsights" "BraintreeThreeDSecure" "BraintreeVenmo")
+
+          for scheme in "${SCHEMES[@]}"; do
+            # 3) Build device archive
+            xcodebuild archive -workspace Braintree.xcworkspace -scheme "$scheme" -destination "generic/platform=iOS" -archivePath "archives/${scheme}_Device" BUILD_LIBRARY_FOR_DISTRIBUTION=YES SKIP_INSTALL=NO
+
+            # 4) Build simulator archive
+            xcodebuild archive -workspace Braintree.xcworkspace -scheme "$scheme" -destination "generic/platform=iOS Simulator" -archivePath "archives/${scheme}_Simulator" BUILD_LIBRARY_FOR_DISTRIBUTION=YES SKIP_INSTALL=NO
+
+            # 5) Combine archives into xcframework
+            xcodebuild -create-xcframework \
+              -framework "archives/${scheme}_Device.xcarchive/Products/Library/Frameworks/${scheme}.framework" \
+              -framework "archives/${scheme}_Simulator.xcarchive/Products/Library/Frameworks/${scheme}.framework" \
+              -output "Braintree_Static/${scheme}.xcframework"
+          done
+
+          # 6) Zip static frameworks
+          zip -r Braintree_Static.xcframework.zip Braintree_Static
+
+          # 7) Reset build setting changes
+          git checkout Braintree.xcodeproj/project.pbxproj
+
+      - name: Upload static pre-built xcframeworks to GitHub release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: Braintree_Static.xcframework.zip
+          asset_name: Braintree_Static.xcframework.zip
+          asset_content_type: application/zip
+
+      - name: Publish reference docs
+        run: |
+          set -euo pipefail
+          bundle install
+          brew install sourcekitten
+
+          # run sourcekitten on each Swift module individually
+          sourcekitten doc -- -workspace Braintree.xcworkspace -scheme BraintreeCore -destination 'name=iPhone 16,platform=iOS Simulator' > braintree-core.json
+          sourcekitten doc -- -workspace Braintree.xcworkspace -scheme BraintreeSEPADirectDebit -destination 'name=iPhone 16,platform=iOS Simulator' > braintree-sepa-direct-debit.json
+          sourcekitten doc -- -workspace Braintree.xcworkspace -scheme BraintreeAmericanExpress -destination 'name=iPhone 16,platform=iOS Simulator' > braintree-american-express.json
+          sourcekitten doc -- -workspace Braintree.xcworkspace -scheme BraintreeDataCollector -destination 'name=iPhone 16,platform=iOS Simulator' > braintree-data-collector.json
+          sourcekitten doc -- -workspace Braintree.xcworkspace -scheme BraintreeApplePay -destination 'name=iPhone 16,platform=iOS Simulator' > braintree-apple-pay.json
+          sourcekitten doc -- -workspace Braintree.xcworkspace -scheme BraintreeLocalPayment -destination 'name=iPhone 16,platform=iOS Simulator' > braintree-local-payment.json
+          sourcekitten doc -- -workspace Braintree.xcworkspace -scheme BraintreeThreeDSecure -destination 'name=iPhone 16,platform=iOS Simulator' > braintree-three-d-secure.json
+          sourcekitten doc -- -workspace Braintree.xcworkspace -scheme BraintreeCard -destination 'name=iPhone 16,platform=iOS Simulator' > braintree-card.json
+          sourcekitten doc -- -workspace Braintree.xcworkspace -scheme BraintreePayPal -destination 'name=iPhone 16,platform=iOS Simulator' > braintree-paypal.json
+          sourcekitten doc -- -workspace Braintree.xcworkspace -scheme BraintreeVenmo -destination 'name=iPhone 16,platform=iOS Simulator' > braintree-venmo.json
+          sourcekitten doc -- -workspace Braintree.xcworkspace -scheme BraintreePayPalMessaging -destination 'name=iPhone 16,platform=iOS Simulator' > braintree-paypal-messaging.json
+          sourcekitten doc -- -workspace Braintree.xcworkspace -scheme BraintreeShopperInsights -destination 'name=iPhone 16,platform=iOS Simulator' > braintree-shopper-insights.json
+          sourcekitten doc -- -workspace Braintree.xcworkspace -scheme BraintreeUIComponents -destination 'name=iPhone 16,platform=iOS Simulator' > braintree-ui-components.json
+
+          # merge sourcekitten output
+          jq -s '.[0] + .[1] + .[2] + .[3] + .[4] + .[5] + .[6] + .[7] + .[8] + .[9] + .[10] + .[11] + .[12]' braintree-core.json braintree-sepa-direct-debit.json braintree-american-express.json braintree-data-collector.json braintree-apple-pay.json braintree-local-payment.json braintree-three-d-secure.json braintree-card.json braintree-paypal.json braintree-venmo.json braintree-paypal-messaging.json braintree-shopper-insights.json braintree-ui-components.json > swiftDoc.json
+
+          bundle exec jazzy \
+            --sourcekitten-sourcefile swiftDoc.json \
+            --author Braintree \
+            --author_url http://braintreepayments.com \
+            --github_url https://github.com/braintree/braintree_ios \
+            --github-file-prefix "https://github.com/braintree/braintree_ios/tree/${RELEASE_VERSION}" \
+            --theme fullwidth \
+            --output "${RELEASE_VERSION}"
+
+          # Clean up JSON build artifacts before switching branches
+          rm -f braintree-*.json swiftDoc.json
+
+          # Store current branch to return to it later
+          CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+          git checkout gh-pages
+          ln -sfn "${RELEASE_VERSION}" current
+          git add current "${RELEASE_VERSION}"
+          git commit -m "Publish ${RELEASE_VERSION} docs to github pages"
+          git push
+
+          # Return to original branch to avoid stashing in CocoaPods step
+          git checkout "${CURRENT_BRANCH}"
+
+      - name: Publish to CocoaPods
+        env:
+          COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+        run: |
+          set -euo pipefail
+          git checkout "${RELEASE_VERSION}"
+          pod trunk push Braintree.podspec

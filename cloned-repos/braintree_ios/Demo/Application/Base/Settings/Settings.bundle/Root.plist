@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>DisplaySortedByTitle</key>
+			<true/>
+			<key>Title</key>
+			<string>Integration</string>
+			<key>Key</key>
+			<string>BraintreeDemoSettingsIntegration</string>
+			<key>DefaultValue</key>
+			<string>BraintreeDemoCardTokenizationViewController</string>
+			<key>Titles</key>
+			<array>
+				<string>PayPal - Web Checkout</string>
+				<string>Credit Card Tokenization</string>
+				<string>Venmo - Custom Button</string>
+				<string>UI Components</string>
+				<string>Apple Pay - PassKit</string>
+				<string>3D Secure Payment Flow</string>
+				<string>Fraud Protection - BTDataCollector</string>
+				<string>iDEAL</string>
+				<string>Amex</string>
+				<string>SEPA Direct Debit</string>
+				<string>Payment Ready v1</string>
+				<string>Payment Ready v2</string>
+				<string>PayPal Messaging</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<string>PayPalWebCheckoutViewController</string>
+				<string>CardTokenizationViewController</string>
+				<string>VenmoViewController</string>
+				<string>UIComponentsViewController</string>
+				<string>ApplePayViewController</string>
+				<string>ThreeDSecureViewController</string>
+				<string>DataCollectorViewController</string>
+				<string>IdealViewController</string>
+				<string>AmexViewController</string>
+				<string>SEPADirectDebitViewController</string>
+				<string>ShopperInsightsViewController</string>
+				<string>ShopperInsightsViewControllerV2</string>
+				<string>PayPalMessagingViewController</string>
+			</array>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Environment</string>
+			<key>Key</key>
+			<string>BraintreeDemoSettingsEnvironmentDefaultsKey</string>
+			<key>DefaultValue</key>
+			<integer>0</integer>
+			<key>ShortTitles</key>
+			<array>
+				<string>Sandbox</string>
+				<string>Production</string>
+				<string>Custom</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Sandbox</string>
+				<string>Production</string>
+				<string>Custom</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+			</array>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>Custom Authorization</string>
+			<key>Key</key>
+			<string>BraintreeDemoSettingsCustomAuthorizationKey</string>
+			<key>IASKTextAlignment</key>
+			<string>IASKUITextAlignmentRight</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Authorization Type</string>
+			<key>ShortTitles</key>
+			<array>
+				<string>Client Token</string>
+				<string>Tokenization Key</string>
+				<string>New PayPal Checkout Tokenization Key</string>
+			</array>
+			<key>Key</key>
+			<string>BraintreeDemoSettingsAuthorizationTypeKey</string>
+			<key>DefaultValue</key>
+			<integer>0</integer>
+			<key>Titles</key>
+			<array>
+				<string>Client Token</string>
+				<string>Tokenization Key</string>
+				<string>New PayPal Checkout Tokenization Key</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+			</array>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Customer</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Include Customer in Client Token</string>
+			<key>Key</key>
+			<string>BraintreeDemoCustomerPresent</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>Customer ID (Random if Blank)</string>
+			<key>Key</key>
+			<string>BraintreeDemoCustomerIdentifier</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>3D Secure</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Required (3DS Transaction Option)</string>
+			<key>Key</key>
+			<string>BraintreeDemoSettingsThreeDSecureRequiredDefaultsKey</string>
+			<key>Values</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+			</array>
+			<key>DefaultValue</key>
+			<integer>0</integer>
+			<key>Titles</key>
+			<array>
+				<string>Default (Required if 3DS Verification present)</string>
+				<string>Required</string>
+				<string>Optional (required = false)</string>
+			</array>
+			<key>ShortTitles</key>
+			<array>
+				<string>Default</string>
+				<string>Required</string>
+				<string>Optional</string>
+			</array>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Client Token Version</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Client Token Version</string>
+			<key>Key</key>
+			<string>BraintreeDemoSettingsClientTokenVersionDefaultsKey</string>
+			<key>Values</key>
+			<array>
+				<integer>2</integer>
+				<integer>3</integer>
+			</array>
+			<key>DefaultValue</key>
+			<integer>2</integer>
+			<key>Titles</key>
+			<array>
+				<string>v2</string>
+				<string>v3</string>
+			</array>
+			<key>ShortTitles</key>
+			<array>
+				<string>v2</string>
+				<string>v3</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

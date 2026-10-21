@@ -1,0 +1,419 @@
+import React, { useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { loadCoreSdkScript } from "@paypal/paypal-js/sdk-v6";
+
+import {
+  PayPalContext,
+  initialState,
+  instanceReducer,
+} from "../context/PayPalProviderContext";
+import { PayPalDispatchContext } from "../context/PayPalDispatchContext";
+import { useIsomorphicLayoutEffect } from "../hooks/useIsomorphicLayoutEffect";
+import {
+  INSTANCE_LOADING_STATE,
+  INSTANCE_DISPATCH_ACTION,
+} from "../types/ProviderEnums";
+import { toError, useCompareMemoize, useDeepCompareMemoize } from "../utils";
+import { useError } from "../hooks/useError";
+import { getOwnProperty } from "../getOwnProperty";
+
+import type {
+  Components,
+  CreateInstanceOptions,
+  FindEligiblePaymentMethodsResponse,
+  LoadCoreSdkScriptOptions,
+  PayPalV6Namespace,
+} from "../types";
+import type { PayPalState } from "../context/PayPalProviderContext";
+import type { usePayPal } from "../hooks/usePayPal";
+
+type PayPalProviderPropsBase = Omit<
+  CreateInstanceOptions<readonly [Components, ...Components[]]>,
+  "components" | "clientToken" | "clientId"
+> &
+  Omit<LoadCoreSdkScriptOptions, "dataSdkIntegrationSource"> & {
+    components?: Components[];
+    eligibleMethodsResponse?: FindEligiblePaymentMethodsResponse;
+    children: React.ReactNode;
+  };
+
+type PayPalProviderProps =
+  | (PayPalProviderPropsBase & {
+      clientToken: string | Promise<string> | undefined;
+      clientId?: never;
+    })
+  | (PayPalProviderPropsBase & {
+      clientId: string | Promise<string> | undefined;
+      clientToken?: never;
+    });
+
+/**
+ * {@link PayPalProvider} creates the SDK script, component scripts, runs eligibility, then
+ * provides these in context to child components via the {@link usePayPal} hook.
+ *
+ * SDK loading is automatically deferred until clientToken or clientId is available.
+ * Both can be either a string, Promise, or undefined.
+ *
+ * **Important:** When passing a Promise, you must ensure referential stability across renders.
+ * An unstable Promise reference (e.g., calling `fetchClientToken()` or `fetchClientId()` inline)
+ * will cause the SDK to re-initialize on every render. Wrap the promise in `useMemo` or store it in state.
+ *
+ * **The `environment` prop is required.** `clientId` does not select the environment in v6 — a
+ * live `clientId` will still load the sandbox SDK if `environment="sandbox"`. Pass
+ * `environment="production"` or `environment="sandbox"` explicitly.
+ *
+ * @example
+ * // With string clientToken
+ * <PayPalProvider
+ *   clientToken={token}
+ *   environment="sandbox"
+ *   components={["paypal-payments", "venmo-payments"]}
+ *   pageType="checkout"
+ * >
+ *   <PayPalOneTimePaymentButton />
+ * </PayPalProvider>
+ *
+ * @example
+ * // With string clientId
+ * <PayPalProvider
+ *   clientId="YOUR_CLIENT_ID"
+ *   environment="sandbox"
+ *   components={["paypal-payments"]}
+ *   pageType="checkout"
+ * >
+ *   <PayPalOneTimePaymentButton />
+ * </PayPalProvider>
+ *
+ * @example
+ * // With Promise clientToken (memoize to prevent re-fetching)
+ * const tokenPromise = useMemo(() => fetchClientToken(), []);
+ *
+ * <PayPalProvider
+ *   clientToken={tokenPromise}
+ *   environment="sandbox"
+ *   pageType="checkout"
+ * >
+ *   <PayPalOneTimePaymentButton />
+ * </PayPalProvider>
+ *
+ * @example
+ * // With Promise clientId
+ * const clientIdPromise = useMemo(() => fetchClientId(), []);
+ *
+ * <PayPalProvider
+ *   clientId={clientIdPromise}
+ *   environment="sandbox"
+ *   pageType="checkout"
+ * >
+ *   <PayPalOneTimePaymentButton />
+ * </PayPalProvider>
+ *
+ * @example
+ * // With deferred loading (clientToken)
+ * const [clientToken, setClientToken] = useState<string>();
+ *
+ * useEffect(() => {
+ *   fetchClientToken().then(setClientToken);
+ * }, []);
+ *
+ * <PayPalProvider
+ *   clientToken={clientToken}
+ *   environment="sandbox"
+ *   pageType="checkout"
+ * >
+ *   <PayPalOneTimePaymentButton />
+ * </PayPalProvider>
+ *
+ * @example
+ * // With deferred loading (clientId)
+ * const [clientId, setClientId] = useState<string>();
+ *
+ * useEffect(() => {
+ *   fetchClientId().then(setClientId);
+ * }, []);
+ *
+ * <PayPalProvider
+ *   clientId={clientId}
+ *   environment="sandbox"
+ *   pageType="checkout"
+ * >
+ *   <PayPalOneTimePaymentButton />
+ * </PayPalProvider>
+ *
+ * @example
+ * // Show custom loader while SDK initializes
+ * function MyCheckout() {
+ *   const { loadingStatus } = usePayPal();
+ *   const isPending = loadingStatus === INSTANCE_LOADING_STATE.PENDING;
+ *
+ *   if (isPending) {
+ *     return <div>Loading PayPal SDK...</div>;
+ *   }
+ *
+ *   return <PayPalOneTimePaymentButton orderId="ORDER-123" />;
+ * }
+ *
+ * <PayPalProvider clientToken={token} environment="sandbox" pageType="checkout">
+ *   <MyCheckout />
+ * </PayPalProvider>
+ */
+export const PayPalProvider: React.FC<PayPalProviderProps> = ({
+  clientMetadataId,
+  clientToken,
+  clientId,
+  components = ["paypal-payments"],
+  locale,
+  pageType,
+  partnerAttributionId,
+  shopperSessionId,
+  testBuyerCountry,
+  eligibleMethodsResponse,
+  children,
+  merchantId,
+  ...scriptOptions
+}) => {
+  const memoizedComponents = useCompareMemoize(components);
+  const memoizedMerchantId = useDeepCompareMemoize(merchantId);
+  const memoizedEligibleMethodsResponse = useDeepCompareMemoize(
+    eligibleMethodsResponse,
+  );
+  const [paypalNamespace, setPaypalNamespace] =
+    useState<PayPalV6Namespace | null>(null);
+  const [state, dispatch] = useReducer(instanceReducer, initialState);
+  const [isHydrated, setIsHydrated] = useState(false);
+  // Ref to hold script options to avoid re-running effect
+  const loadCoreScriptOptions = useRef({
+    ...scriptOptions,
+    dataSdkIntegrationSource: "react-paypal-js",
+  });
+
+  // Set hydrated state after initial client render to prevent hydration mismatch
+  useIsomorphicLayoutEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  // Using the error hook here so it can participate in side-effects provided by the hook.
+  // The actual error instance is stored in the reducer's state.
+  const [, setError] = useError();
+
+  // Load Core SDK script
+  useEffect(() => {
+    let isSubscribed = true;
+
+    const loadSdk = async () => {
+      try {
+        // Read via getOwnProperty instead of dot access: a plain dot access
+        // would fall through to a polluted Object.prototype value when the
+        // caller omits a field, and re-assigning that value as an explicit
+        // key below would turn it into an *own* property — defeating
+        // loadCoreSdkScript's own getOwnProperty guard downstream (CWE-1321).
+        const sdkOptions = {
+          environment: getOwnProperty(
+            loadCoreScriptOptions.current,
+            "environment",
+          ),
+          debug: getOwnProperty(loadCoreScriptOptions.current, "debug"),
+          dataNamespace: getOwnProperty(
+            loadCoreScriptOptions.current,
+            "dataNamespace",
+          ),
+          dataSdkIntegrationSource: getOwnProperty(
+            loadCoreScriptOptions.current,
+            "dataSdkIntegrationSource",
+          ),
+        } as LoadCoreSdkScriptOptions;
+
+        const sdkNamespace = await loadCoreSdkScript(sdkOptions);
+
+        if (sdkNamespace && isSubscribed) {
+          setPaypalNamespace(sdkNamespace);
+        }
+      } catch (error) {
+        if (isSubscribed) {
+          setError(error);
+          dispatch({
+            type: INSTANCE_DISPATCH_ACTION.SET_ERROR,
+            value: toError(error),
+          });
+        }
+      }
+    };
+
+    loadSdk();
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, [setError]);
+
+  // Create SDK Instance
+  useEffect(() => {
+    if (!paypalNamespace) {
+      return;
+    }
+
+    if (!clientToken && !clientId) {
+      return;
+    }
+
+    dispatch({
+      type: INSTANCE_DISPATCH_ACTION.SET_LOADING_STATUS,
+      value: INSTANCE_LOADING_STATE.PENDING,
+    });
+
+    let isSubscribed = true;
+
+    const createSdkInstance = async () => {
+      try {
+        const authCredential = clientToken || clientId;
+        const isClientToken = !!clientToken;
+
+        let credentialValue: string | undefined;
+        if (typeof authCredential === "string") {
+          credentialValue = authCredential;
+        } else if (authCredential) {
+          try {
+            credentialValue = await authCredential;
+          } catch (error) {
+            const authError = new Error(
+              `Failed to resolve ${isClientToken ? "clientToken" : "clientId"}. Expected a Promise that resolves to a string, but it was rejected with: ${toError(error).message}`,
+            );
+            if (isSubscribed) {
+              setError(authError);
+              dispatch({
+                type: INSTANCE_DISPATCH_ACTION.SET_ERROR,
+                value: authError,
+              });
+            }
+            return;
+          }
+        }
+
+        if (!credentialValue || !isSubscribed) {
+          return;
+        }
+
+        const baseOptions = {
+          clientMetadataId,
+          components: memoizedComponents,
+          locale,
+          pageType,
+          partnerAttributionId,
+          shopperSessionId,
+          testBuyerCountry,
+          merchantId: memoizedMerchantId,
+        };
+
+        const instanceOptions = isClientToken
+          ? { ...baseOptions, clientToken: credentialValue }
+          : { ...baseOptions, clientId: credentialValue };
+
+        const instance = await paypalNamespace.createInstance(instanceOptions);
+
+        if (!isSubscribed) {
+          return;
+        }
+
+        dispatch({
+          type: INSTANCE_DISPATCH_ACTION.SET_INSTANCE,
+          value: instance,
+        });
+      } catch (error) {
+        if (isSubscribed) {
+          setError(error);
+          dispatch({
+            type: INSTANCE_DISPATCH_ACTION.SET_ERROR,
+            value: toError(error),
+          });
+        }
+      }
+    };
+
+    createSdkInstance();
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, [
+    clientMetadataId,
+    clientToken,
+    clientId,
+    locale,
+    memoizedComponents,
+    memoizedMerchantId,
+    pageType,
+    partnerAttributionId,
+    paypalNamespace,
+    shopperSessionId,
+    testBuyerCountry,
+    setError,
+  ]);
+
+  useEffect(() => {
+    const sdkInstance = state.sdkInstance;
+    if (!sdkInstance || !memoizedEligibleMethodsResponse) {
+      return;
+    }
+
+    try {
+      const eligiblePaymentMethods = sdkInstance.hydrateEligibleMethods(
+        memoizedEligibleMethodsResponse,
+      );
+      dispatch({
+        type: INSTANCE_DISPATCH_ACTION.SET_ELIGIBILITY_HYDRATED,
+        value: { eligiblePaymentMethods },
+      });
+    } catch (error) {
+      setError(error);
+      dispatch({
+        type: INSTANCE_DISPATCH_ACTION.SET_ERROR,
+        value: toError(error),
+      });
+    }
+  }, [state.sdkInstance, memoizedEligibleMethodsResponse, setError]);
+
+  // Dispatched during render (not in an effect) so children see the
+  // correct status on the same render, before their own effects run.
+  let eligibilityHydrationStatus = INSTANCE_LOADING_STATE.RESOLVED;
+  if (memoizedEligibleMethodsResponse && !state.isEligibilityHydrated) {
+    eligibilityHydrationStatus = state.error
+      ? INSTANCE_LOADING_STATE.REJECTED
+      : INSTANCE_LOADING_STATE.PENDING;
+  }
+  if (eligibilityHydrationStatus !== state.eligibilityHydrationStatus) {
+    dispatch({
+      type: INSTANCE_DISPATCH_ACTION.SET_ELIGIBILITY_HYDRATION_STATUS,
+      value: eligibilityHydrationStatus,
+    });
+  }
+
+  const contextValue: PayPalState = useMemo(
+    () => ({
+      sdkInstance: state.sdkInstance,
+      eligiblePaymentMethods: state.eligiblePaymentMethods,
+      eligiblePaymentMethodsPayload: state.eligiblePaymentMethodsPayload,
+      error: state.error,
+      loadingStatus: state.loadingStatus,
+      isHydrated,
+      eligibilityHydrationStatus,
+      isEligibilityHydrated: state.isEligibilityHydrated,
+    }),
+    [
+      state.sdkInstance,
+      state.eligiblePaymentMethods,
+      state.eligiblePaymentMethodsPayload,
+      state.error,
+      state.loadingStatus,
+      isHydrated,
+      eligibilityHydrationStatus,
+      state.isEligibilityHydrated,
+    ],
+  );
+
+  return (
+    <PayPalDispatchContext.Provider value={dispatch}>
+      <PayPalContext.Provider value={contextValue}>
+        {children}
+      </PayPalContext.Provider>
+    </PayPalDispatchContext.Provider>
+  );
+};

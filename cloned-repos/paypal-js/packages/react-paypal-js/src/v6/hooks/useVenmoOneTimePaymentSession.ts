@@ -1,0 +1,178 @@
+import { useCallback, useEffect, useRef } from "react";
+
+import { usePayPal } from "./usePayPal";
+import { useIsMountedRef } from "./useIsMounted";
+import { useError } from "./useError";
+import { useProxyProps, createPaymentSession } from "../utils";
+import { INSTANCE_LOADING_STATE } from "../types/ProviderEnums";
+
+import type {
+  VenmoOneTimePaymentSession,
+  VenmoPresentationModeOptions,
+  VenmoOneTimePaymentSessionOptions,
+  VenmoOneTimePaymentSessionPromise,
+  BasePaymentSessionReturn,
+  WithOptionalPresentationMode,
+} from "../types";
+
+/**
+ * `sandboxSupport` is a temporary Venmo sandbox-testing flag that the JS SDK will
+ * remove once it is no longer needed. It is intentionally typed locally here
+ * rather than in `@paypal/paypal-js`, so it can be dropped from react-paypal-js
+ * without a breaking change to the published SDK types.
+ */
+type VenmoSandboxSupport = {
+  sandboxSupport?: { enabled: boolean };
+};
+
+export type UseVenmoOneTimePaymentSessionProps = (
+  | (Omit<VenmoOneTimePaymentSessionOptions, "orderId"> & {
+      createOrder: () => VenmoOneTimePaymentSessionPromise;
+      orderId?: never;
+    })
+  | (VenmoOneTimePaymentSessionOptions & {
+      createOrder?: never;
+      orderId: string;
+    })
+) &
+  WithOptionalPresentationMode<VenmoPresentationModeOptions> &
+  VenmoSandboxSupport;
+
+/**
+ * Hook for managing Venmo one-time payment sessions.
+ *
+ * This hook creates and manages a Venmo payment session. It handles session lifecycle
+ * and provides methods to start, cancel, and destroy the session.
+ *
+ * @returns Object with: `error` (any session error), `isPending` (SDK loading), `handleClick` (starts session), `handleCancel` (cancels session), `handleDestroy` (cleanup)
+ *
+ * `presentationMode` is optional and defaults to `"auto"`.
+ *
+ * Pass `savePayment: true` to vault the buyer's Venmo account while also completing
+ * the order (VAULT_WITH_PAYMENT). For a vault-only flow with no purchase, use
+ * {@link useVenmoSavePaymentSession} instead.
+ *
+ * @example
+ * function VenmoCheckout() {
+ *   const { error, isPending, handleClick, handleCancel } = useVenmoOneTimePaymentSession({
+ *     createOrder: async () => ({ orderId: 'ORDER-123' }),
+ *     onApprove: (data) => console.log('Approved:', data),
+ *     onCancel: () => console.log('Cancelled'),
+ *   });
+ *
+ *   if (isPending) return null;
+ *   if (error) return <div>Error: {error.message}</div>;
+ *
+ *   return (
+ *     <venmo-button onClick={handleClick} onCancel={handleCancel} />
+ *   );
+ * }
+ */
+export function useVenmoOneTimePaymentSession({
+  presentationMode = "auto",
+  fullPageOverlay,
+  createOrder,
+  orderId,
+  savePayment,
+  sandboxSupport,
+  ...callbacks
+}: UseVenmoOneTimePaymentSessionProps): BasePaymentSessionReturn {
+  const { sdkInstance, loadingStatus } = usePayPal();
+  const isMountedRef = useIsMountedRef();
+  const sessionRef = useRef<VenmoOneTimePaymentSession | null>(null);
+  const proxyCallbacks = useProxyProps(callbacks);
+  const [error, setError] = useError();
+
+  // Prevents retrying session creation with a failed SDK instance
+  const failedSdkRef = useRef<unknown>(null);
+
+  const isPending = loadingStatus === INSTANCE_LOADING_STATE.PENDING;
+
+  const handleDestroy = useCallback(() => {
+    sessionRef.current?.destroy();
+    sessionRef.current = null;
+  }, []);
+
+  // Handle SDK availability
+  useEffect(() => {
+    // Reset failed SDK tracking when SDK instance changes
+    if (failedSdkRef.current !== sdkInstance) {
+      failedSdkRef.current = null;
+    }
+
+    if (sdkInstance) {
+      setError(null);
+    } else if (loadingStatus !== INSTANCE_LOADING_STATE.PENDING) {
+      setError(new Error("no sdk instance available"));
+    }
+  }, [sdkInstance, setError, loadingStatus]);
+
+  // Create and manage session lifecycle
+  useEffect(() => {
+    if (!sdkInstance) {
+      return;
+    }
+
+    const newSession = createPaymentSession({
+      sessionCreator: () =>
+        sdkInstance.createVenmoOneTimePaymentSession({
+          orderId,
+          savePayment,
+          ...proxyCallbacks,
+        }),
+      failedSdkRef,
+      sdkInstance,
+      setError,
+      errorMessage:
+        'Failed to create payment session. This may occur if the required component "venmo-payments" is not included in the SDK components array.',
+    });
+
+    if (!newSession) {
+      return;
+    }
+
+    sessionRef.current = newSession;
+
+    return () => {
+      newSession.destroy();
+    };
+  }, [sdkInstance, orderId, savePayment, proxyCallbacks, setError]);
+
+  const handleCancel = useCallback(() => {
+    sessionRef.current?.cancel();
+  }, []);
+
+  const handleClick = useCallback(async () => {
+    if (!isMountedRef.current) {
+      return;
+    }
+
+    if (!sessionRef.current) {
+      setError(new Error("Venmo session not available"));
+      return;
+    }
+
+    const startOptions = {
+      presentationMode,
+      fullPageOverlay,
+      ...(sandboxSupport && { sandboxSupport }),
+    } as VenmoPresentationModeOptions & VenmoSandboxSupport;
+
+    await sessionRef.current.start(startOptions, createOrder?.());
+  }, [
+    isMountedRef,
+    presentationMode,
+    fullPageOverlay,
+    sandboxSupport,
+    createOrder,
+    setError,
+  ]);
+
+  return {
+    error,
+    isPending,
+    handleCancel,
+    handleClick,
+    handleDestroy,
+  };
+}

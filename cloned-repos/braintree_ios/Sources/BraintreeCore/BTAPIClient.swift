@@ -1,0 +1,307 @@
+import UIKit
+
+/// This class acts as the entry point for accessing the Braintree APIs via common HTTP methods performed on API endpoints.
+/// - Note: It also manages authentication via tokenization key and provides access to a merchant's gateway configuration.
+@objcMembers public class BTAPIClient: NSObject, BTHTTPNetworkTiming {
+
+    // MARK: - Public Properties
+
+    /// The TokenizationKey or ClientToken used to authorize the APIClient
+    public var authorization: ClientAuthorization
+
+    /// Client metadata that is used for tracking the client session
+    public private(set) var metadata: BTClientMetadata
+
+    // MARK: - Internal Properties
+    
+    var http: BTHTTP?
+    var graphQLHTTP: BTGraphQLHTTP?
+    var payPalHTTP: BTHTTP?
+    var configurationLoader: ConfigurationLoader
+    
+    /// Exposed for testing analytics
+    weak var analyticsService: AnalyticsSendable? = BTAnalyticsService.shared
+
+    // MARK: - Initializers
+
+    /// :nodoc: This method is exposed for internal Braintree use only. Do not use. It is not covered by Semantic Versioning and may change or be removed at any time.
+    /// Initialize a new API client.
+    /// - Parameter authorization: Your tokenization key or client token.
+    @_documentation(visibility: private)
+    public init(authorization: String) {
+        self.authorization = Self.authorization(from: authorization)
+        self.metadata = BTClientMetadata()
+
+        let btHTTP = BTHTTP(authorization: self.authorization)
+        http = btHTTP
+        configurationLoader = ConfigurationLoader(http: btHTTP)
+
+        super.init()
+
+        analyticsService?.setAPIClient(self)
+        http?.networkTimingDelegate = self
+
+        // Kickoff the background request to fetch the config
+        fetchOrReturnRemoteConfiguration { _, _ in
+            // No-op
+        }
+    }
+
+    // MARK: - Deinit
+
+    deinit {
+        http?.session.finishTasksAndInvalidate()
+        graphQLHTTP?.session.finishTasksAndInvalidate()
+        payPalHTTP?.session.finishTasksAndInvalidate()
+    }
+
+    // MARK: - Public Methods
+
+    /// :nodoc: This method is exposed for internal Braintree use only. Do not use. It is not covered by Semantic Versioning and may change or be removed at any time.
+    ///
+    ///  Provides configuration data as a `BTJSON` object.
+    ///
+    ///  The configuration data can be used by supported payment options to configure themselves
+    ///  dynamically through the Control Panel. It also contains configuration options for the Braintree SDK Core components.
+    /// - Parameter completion: Callback that returns either a `BTConfiguration` or `Error`
+    /// - Note: This method is asynchronous because it requires a network call to fetch the
+    /// configuration for a merchant account from Braintree servers. This configuration is
+    /// cached on subsequent calls for better performance.
+    @_documentation(visibility: private)
+    public func fetchOrReturnRemoteConfiguration(_ completion: @escaping (BTConfiguration?, Error?) -> Void) {
+        Task { @MainActor in
+            do {
+                let configuration = try await configurationLoader.getConfig()
+                setupHTTPCredentials(configuration)
+                completion(configuration, nil)
+            } catch {
+                completion(nil, error)
+            }
+        }
+    }
+    
+    public func fetchOrReturnRemoteConfiguration() async throws -> BTConfiguration {
+        let configuration = try await configurationLoader.getConfig()
+        await MainActor.run { setupHTTPCredentials(configuration) }
+        return configuration
+    }
+       
+    /// :nodoc: This method is exposed for internal Braintree use only. Do not use. It is not covered by Semantic Versioning and may change or be removed at any time.
+    ///
+    /// Perfom an HTTP GET on a URL composed of the configured from environment and the given path.
+    /// - Parameters:
+    ///   - path: The endpoint URI path.
+    ///   - parameters: Optional set of query parameters to be encoded with the request.
+    ///   - httpType: The underlying `BTAPIClientHTTPService` of the HTTP request. Defaults to `.gateway`.
+    /// - Returns: On success, `(BTJSON?, HTTPURLResponse?)` will contain the JSON body response and the HTTP response.
+    @_documentation(visibility: private)
+    public func get(
+        _ path: String,
+        parameters: Encodable? = nil,
+        httpType: BTAPIClientHTTPService = .gateway
+    ) async throws -> (BTJSON?, HTTPURLResponse?) {
+        if authorization.type == .invalidAuthorization {
+            throw BTAPIClientError.invalidAuthorization(authorization.originalValue)
+        }
+        
+        let configuration = try await fetchOrReturnRemoteConfiguration()
+        
+        guard let http = http(for: httpType) else {
+            throw BTHTTPError.deallocated(httpType.description)
+        }
+        return try await http.get(
+            path,
+            configuration: configuration,
+            parameters: parameters
+        )
+    }
+    
+    /// :nodoc: This method is exposed for internal Braintree use only. Do not use. It is not covered by Semantic Versioning and may change or be removed at any time.
+    ///
+    /// Perfom an HTTP POST on a URL composed of the configured from environment and the given path.
+    /// - Parameters:
+    ///   - path: The endpoint URI path.
+    ///   - parameters: Optional set of query parameters to be encoded with the request.
+    ///   - httpType: The underlying `BTAPIClientHTTPService` of the HTTP request. Defaults to `.gateway`.
+    /// - Returns: On success, `(BTJSON?, HTTPURLResponse?)` will contain the JSON body response and the HTTP response.
+    @_documentation(visibility: private)
+    public func post(
+        _ path: String,
+        parameters: Encodable? = nil,
+        headers: [String: String]? = nil,
+        httpType: BTAPIClientHTTPService = .gateway
+    ) async throws -> (BTJSON?, HTTPURLResponse?) {
+        if authorization.type == .invalidAuthorization {
+            throw BTAPIClientError.invalidAuthorization(authorization.originalValue)
+        }
+
+        let configuration = try await fetchOrReturnRemoteConfiguration()
+
+        let postParameters = BTAPIRequest(requestBody: parameters, metadata: metadata, httpType: httpType)
+        
+        guard let http = http(for: httpType) else {
+            throw BTHTTPError.deallocated(httpType.description)
+        }
+        return try await http.post(
+            path,
+            configuration: configuration,
+            parameters: postParameters,
+            headers: headers
+        )
+    }
+
+    /// :nodoc: This method is exposed for internal Braintree use only. Do not use. It is not covered by Semantic Versioning and may change or be removed at any time.
+    @_documentation(visibility: private)
+    public func sendAnalyticsEvent(
+        _ eventName: String,
+        applicationState: String? = nil,
+        appSwitchURL: URL? = nil,
+        buttonOrder: String? = nil,
+        buttonType: String? = nil,
+        contextID: String? = nil,
+        contextType: String? = nil,
+        correlationID: String? = nil,
+        didEnablePayPalAppSwitch: Bool? = nil,
+        didPayPalServerAttemptAppSwitch: Bool? = nil,
+        errorDescription: String? = nil,
+        fundingSource: String? = nil,
+        isConfigFromCache: Bool? = nil,
+        isVaultRequest: Bool? = nil,
+        linkType: LinkType? = nil,
+        merchantExperiment: String? = nil,
+        pageType: String? = nil,
+        recurringBillingPlanType: String? = nil,
+        shopperSessionID: String? = nil,
+        shouldRequestBillingAgreement: Bool? = nil
+    ) {
+        analyticsService?.sendAnalyticsEvent(
+            FPTIBatchData.Event(
+                applicationState: applicationState,
+                appSwitchURL: appSwitchURL,
+                buttonOrder: buttonOrder,
+                buttonType: buttonType,
+                contextID: contextID,
+                contextType: contextType,
+                correlationID: correlationID,
+                didEnablePayPalAppSwitch: didEnablePayPalAppSwitch,
+                didPayPalServerAttemptAppSwitch: didPayPalServerAttemptAppSwitch,
+                errorDescription: errorDescription,
+                eventName: eventName,
+                fundingSource: fundingSource,
+                isConfigFromCache: isConfigFromCache,
+                isVaultRequest: isVaultRequest,
+                linkType: linkType?.rawValue,
+                merchantExperiment: merchantExperiment,
+                pageType: pageType,
+                recurringBillingPlanType: recurringBillingPlanType,
+                shopperSessionID: shopperSessionID,
+                shouldRequestBillingAgreement: shouldRequestBillingAgreement
+            )
+        )
+    }
+
+    // MARK: - Internal Static Methods
+
+    static func authorizationType(for authorization: String) -> AuthorizationType {
+        let pattern: String = "([a-zA-Z0-9]+)_[a-zA-Z0-9]+_([a-zA-Z0-9_]+)"
+        guard let regularExpression = try? NSRegularExpression(pattern: pattern) else {
+            return .invalidAuthorization
+        }
+
+        let tokenizationKeyMatch: NSTextCheckingResult? = regularExpression.firstMatch(
+            in: authorization,
+            options: [],
+            range: NSRange(location: 0, length: authorization.count)
+        )
+
+        return tokenizationKeyMatch != nil ? .tokenizationKey : .clientToken
+    }
+    
+    // MARK: - Internal Methods
+
+    func http(for httpType: BTAPIClientHTTPService) -> BTHTTP? {
+        switch httpType {
+        case .gateway:
+            return http
+        case .graphQLAPI:
+            return graphQLHTTP
+        case .payPalAPI:
+            return payPalHTTP
+        }
+    }
+    
+    // MARK: Private Helpers
+    
+    // @MainActor serializes writes to graphQLHTTP and payPalHTTP, preventing a data race
+    // where concurrent callers on different executors could each observe nil and race to set them.
+    @MainActor
+    private func setupHTTPCredentials(_ configuration: BTConfiguration?) {
+        if graphQLHTTP == nil {
+            graphQLHTTP = BTGraphQLHTTP(authorization: authorization)
+            graphQLHTTP?.networkTimingDelegate = self
+        }
+        if payPalHTTP == nil {
+            let paypalBaseURL: URL? = payPalAPIURL(forEnvironment: configuration?.environment ?? "")
+
+            if authorization.type == .clientToken {
+                payPalHTTP = BTHTTP(authorization: authorization, customBaseURL: paypalBaseURL)
+                payPalHTTP?.networkTimingDelegate = self
+            }
+        }
+    }
+    
+    private func payPalAPIURL(forEnvironment environment: String) -> URL? {
+        if environment.caseInsensitiveCompare("sandbox") == .orderedSame ||
+            environment.caseInsensitiveCompare("development") == .orderedSame {
+            return BTCoreConstants.payPalSandboxURL
+        } else {
+            return BTCoreConstants.payPalProductionURL
+        }
+    }
+    
+    private static func authorization(from authorization: String) -> ClientAuthorization {
+        let authorizationType = Self.authorizationType(for: authorization)
+
+        switch authorizationType {
+        case .tokenizationKey:
+            do {
+                return try TokenizationKey(authorization)
+            } catch {
+                return InvalidAuthorization(authorization)
+            }
+        case .clientToken:
+            do {
+                return try BTClientToken(clientToken: authorization)
+            } catch {
+                return InvalidAuthorization(authorization)
+            }
+        case .invalidAuthorization:
+            return InvalidAuthorization(authorization)
+        }
+    }
+
+    // MARK: BTAPITimingDelegate conformance
+
+    func fetchAPITiming(path: String, connectionStartTime: Int?, requestStartTime: Int?, startTime: Int, endTime: Int) {
+        var cleanedPath = path.replacingOccurrences(of: "/merchants/([A-Za-z0-9]+)/client_api", with: "", options: .regularExpression)
+        cleanedPath = cleanedPath.replacingOccurrences(
+            of: "payment_methods/.*/three_d_secure",
+            with: "payment_methods/three_d_secure",
+            options: .regularExpression
+        )
+        
+        if cleanedPath != "/v1/tracking/batch/events" {
+            analyticsService?.sendAnalyticsEvent(
+                FPTIBatchData.Event(
+                    connectionStartTime: connectionStartTime,
+                    endpoint: cleanedPath,
+                    endTime: endTime,
+                    eventName: BTCoreAnalytics.apiRequestLatency,
+                    requestStartTime: requestStartTime,
+                    startTime: startTime
+                ),
+                sendImmediately: false
+            )
+        }
+    }
+}

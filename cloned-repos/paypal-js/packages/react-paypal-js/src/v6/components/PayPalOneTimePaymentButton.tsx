@@ -1,0 +1,58 @@
+import React, { useEffect } from "react";
+
+import { usePayPalOneTimePaymentSession } from "../hooks/usePayPalOneTimePaymentSession";
+import { usePayPal } from "../hooks/usePayPal";
+
+import type { ButtonProps } from "../types";
+import type { UsePayPalOneTimePaymentSessionProps } from "../hooks/usePayPalOneTimePaymentSession";
+
+type PayPalOneTimePaymentButtonProps = UsePayPalOneTimePaymentSessionProps &
+  ButtonProps & {
+    autoRedirect?: never;
+  };
+
+/**
+ * `PayPalOneTimePaymentButton` is a button that provides a standard PayPal payment flow.
+ *
+ * `PayPalOneTimePaymentButtonProps` combines the arguments for {@link UsePayPalOneTimePaymentSessionProps}
+ * and {@link ButtonProps}.
+ *
+ * Note, `autoRedirect` is not allowed because if given a `presentationMode` of `"redirect"` the button
+ * would not be able to provide back `redirectURL` from `start`. Advanced integrations that need
+ * `redirectURL` should use the {@link usePayPalOneTimePaymentSession} hook directly.
+ *
+ * `presentationMode` is optional and defaults to `"auto"`.
+ *
+ * @example
+ * <PayPalOneTimePaymentButton
+ *   onApprove={() => {
+ *      // ... on approve logic
+ *   }}
+ *   orderId="your-order-id"
+ * />
+ */
+export const PayPalOneTimePaymentButton = ({
+  type = "pay",
+  disabled = false,
+  ...hookProps
+}: PayPalOneTimePaymentButtonProps): JSX.Element | null => {
+  const { error, isPending, handleClick } =
+    usePayPalOneTimePaymentSession(hookProps);
+  const { isHydrated } = usePayPal();
+
+  useEffect(() => {
+    if (error) {
+      console.error(error);
+    }
+  }, [error]);
+
+  return isHydrated ? (
+    <paypal-button
+      onClick={handleClick}
+      type={type}
+      disabled={disabled || isPending || error !== null ? true : undefined}
+    ></paypal-button>
+  ) : (
+    <div />
+  );
+};

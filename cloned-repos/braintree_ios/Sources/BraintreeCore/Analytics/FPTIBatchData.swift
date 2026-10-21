@@ -1,0 +1,266 @@
+import UIKit
+
+// swiftlint:disable nesting
+/// The POST body for a batch upload of FPTI events
+struct FPTIBatchData: Codable {
+    
+    let events: [EventsContainer] // Single-element "events" array required by FPTI formatting
+    
+    init(metadata: Metadata, events fptiEvents: [Event]?) {
+        self.events = [
+            EventsContainer(
+                metadata: metadata,
+                fptiEvents: fptiEvents ?? []
+            )
+        ]
+    }
+    
+    struct EventsContainer: Codable {
+        
+        let metadata: Metadata
+        let fptiEvents: [Event]
+
+        enum CodingKeys: String, CodingKey {
+            case metadata = "batch_params"
+            case fptiEvents = "event_params"
+        }
+    }
+
+    /// Encapsulates a single event by it's name and timestamp.
+    struct Event: Codable {
+        
+        /// The app's state within the device's lifecycle (i.e. active, inactive, background)
+        let applicationState: String?
+
+        let appSwitchURL: String?
+        /// The order or ranking in which payment buttons appear.
+        let buttonOrder: String?
+        /// The type of button displayed or presented
+        let buttonType: String?
+        /// UTC millisecond timestamp when a networking task started establishing a TCP connection. See [Apple's docs](https://developer.apple.com/documentation/foundation/urlsessiontasktransactionmetrics#3162615).
+        /// `nil` if a persistent connection is used.
+        let connectionStartTime: Int?
+        /// Used for linking events from the client to server side request
+        /// This value will be PayPal Order ID, Payment Token, EC token, Billing Agreement, or Venmo Context ID depending on the flow
+        let contextID: String?
+        let contextType: String?
+        let correlationID: String?
+        let endpoint: String?
+        /// UTC millisecond timestamp when a networking task completed.
+        let endTime: Int?
+        let errorDescription: String?
+        let eventName: String
+        /// True if the `BTConfiguration` was retrieved from local cache after `tokenize()` call.
+        /// False if the `BTConfiguration` was fetched remotely after `tokenize()` call.
+        let isConfigFromCache: Bool?
+        /// True if the PayPal or Venmo request is to be vaulted
+        let isVaultRequest: Bool?
+        /// The type of link the SDK will be handling, currently deeplink or universal
+        let linkType: String?
+        /// The value passed by the merchant for `enablePayPalAppSwitch`
+        let didEnablePayPalAppSwitch: Bool?
+        /// Determined if `create_payment_resource` or `setup_billing_agreement` returned
+        /// an app switch URL in the response
+        let didPayPalServerAttemptAppSwitch: Bool?
+        /// The experiment details associated with a shopper insights flow
+        let merchantExperiment: String?
+        /// The type of page where the payment button is displayed or where an event occurred.
+        let pageType: String?
+        /// UTC millisecond timestamp when a networking task started requesting a resource. See [Apple's docs](https://developer.apple.com/documentation/foundation/urlsessiontasktransactionmetrics#3162615).
+        let requestStartTime: Int?
+        /// Recurring billing plan type, or charge pattern.
+        let recurringBillingPlanType: String?
+        /// The Shopper Insights customer session ID created by a merchant's server SDK or graphQL integration.
+        let shopperSessionID: String?
+        /// Whether or not billing agreement will be created - customer opted to save PayPal for future purchases and a vaulted billing agreement was created with the charge.
+        let shouldRequestBillingAgreement: Bool?
+        /// UTC millisecond timestamp when a networking task initiated.
+        let startTime: Int?
+        let timestamp = String(Date().utcTimestampMilliseconds)
+        let tenantName: String = "Braintree"
+        let fundingSource: String?
+        
+        init(
+            applicationState: String? = nil,
+            appSwitchURL: URL? = nil,
+            buttonOrder: String? = nil,
+            buttonType: String? = nil,
+            connectionStartTime: Int? = nil,
+            contextID: String? = nil,
+            contextType: String? = nil,
+            correlationID: String? = nil,
+            didEnablePayPalAppSwitch: Bool? = nil,
+            didPayPalServerAttemptAppSwitch: Bool? = nil,
+            endpoint: String? = nil,
+            endTime: Int? = nil,
+            errorDescription: String? = nil,
+            eventName: String,
+            fundingSource: String? = nil,
+            isConfigFromCache: Bool? = nil,
+            isVaultRequest: Bool? = nil,
+            linkType: String? = nil,
+            merchantExperiment: String? = nil,
+            pageType: String? = nil,
+            recurringBillingPlanType: String? = nil,
+            requestStartTime: Int? = nil,
+            shopperSessionID: String? = nil,
+            shouldRequestBillingAgreement: Bool? = nil,
+            startTime: Int? = nil
+        ) {
+            self.applicationState = applicationState
+            self.appSwitchURL = appSwitchURL?.absoluteString
+            self.buttonOrder = buttonOrder
+            self.buttonType = buttonType
+            self.connectionStartTime = connectionStartTime
+            self.contextID = contextID
+            self.contextType = contextType
+            self.correlationID = correlationID
+            self.didEnablePayPalAppSwitch = didEnablePayPalAppSwitch
+            self.didPayPalServerAttemptAppSwitch = didPayPalServerAttemptAppSwitch
+            self.endpoint = endpoint
+            self.endTime = endTime
+            self.errorDescription = errorDescription
+            self.eventName = eventName
+            self.isConfigFromCache = isConfigFromCache
+            self.isVaultRequest = isVaultRequest
+            self.linkType = linkType
+            self.merchantExperiment = merchantExperiment
+            self.pageType = pageType
+            self.recurringBillingPlanType = recurringBillingPlanType
+            self.requestStartTime = requestStartTime
+            self.shopperSessionID = shopperSessionID
+            self.shouldRequestBillingAgreement = shouldRequestBillingAgreement
+            self.startTime = startTime
+            self.fundingSource = fundingSource
+        }
+
+        enum CodingKeys: String, CodingKey {
+            case applicationState = "application_state"
+            case appSwitchURL = "url"
+            case buttonOrder = "button_position"
+            case buttonType = "button_type"
+            case connectionStartTime = "connect_start_time"
+            case contextID = "context_id"
+            case contextType = "context_type"
+            case correlationID = "correlation_id"
+            case didEnablePayPalAppSwitch = "merchant_enabled_app_switch"
+            case didPayPalServerAttemptAppSwitch = "attempted_app_switch"
+            case errorDescription = "error_desc"
+            case eventName = "event_name"
+            case isConfigFromCache = "config_cached"
+            case isVaultRequest = "is_vault"
+            case linkType = "link_type"
+            case merchantExperiment = "experiment"
+            case pageType = "page_type"
+            case recurringBillingPlanType = "billing_plan_type"
+            case requestStartTime = "request_start_time"
+            case timestamp = "t"
+            case tenantName = "tenant_name"
+            case shopperSessionID = "shopper_session_id"
+            case shouldRequestBillingAgreement = "is_billing_agreement"
+            case startTime = "start_time"
+            case endTime = "end_time"
+            case endpoint = "endpoint"
+            case fundingSource = "funding_source"
+        }
+    }
+    
+    /// The FPTI tags/ metadata applicable to all events in the batch upload.
+    struct Metadata: Codable {
+          
+        static var application: URLOpener = UIApplication.shared
+
+        let appID: String = Bundle.main.infoDictionary?[kCFBundleIdentifierKey as String] as? String ?? "N/A"
+
+        let appName: String = Bundle.main.infoDictionary?[kCFBundleNameKey as String] as? String ?? "N/A"
+        
+        let authorizationFingerprint: String?
+        
+        let clientSDKVersion = BTCoreConstants.braintreeSDKVersion
+
+        let clientOS: String = UIDevice.current.systemName + " " + UIDevice.current.systemVersion
+
+        let component = "braintreeclientsdk"
+
+        let deviceManufacturer = "Apple"
+
+        let deviceModel: String = {
+            var systemInfo = utsname()
+            uname(&systemInfo)
+            let machineMirror = Mirror(reflecting: systemInfo.machine)
+            let identifier = machineMirror.children.reduce("") { identifier, element in
+                guard let value = element.value as? Int8, value != 0 else { return identifier }
+                return identifier + String(UnicodeScalar(UInt8(value)))
+            }
+            return identifier
+        }()
+
+        let eventSource = "mobile-native"
+
+        let environment: String?
+        
+        let packageManager: String = {
+            #if COCOAPODS
+                "CocoaPods"
+            #elseif SWIFT_PACKAGE
+                "Swift Package Manager"
+            #else
+                "Carthage or Other"
+            #endif
+        }()
+        
+        let integrationType: String
+
+        let isSimulator: Bool = {
+            #if targetEnvironment(simulator)
+                true
+            #else
+                false
+            #endif
+        }()
+
+        let merchantAppVersion: String = Bundle.main.infoDictionary?[kCFBundleVersionKey as String] as? String ?? "N/A"
+
+        let merchantID: String?
+
+        let payPalInstalled: Bool = application.isPayPalAppInstalled()
+
+        let platform = "iOS"
+        
+        let productName: String = "BT_DCC"
+
+        /// Either a randomly generated session ID or the shopper session ID passed in by a merchant
+        let sessionID: String
+
+        let spaceKey: String = "SKDUYK"
+
+        let tokenizationKey: String?
+
+        let venmoInstalled: Bool = application.isVenmoAppInstalled()
+
+        enum CodingKeys: String, CodingKey {
+            case appID = "app_id"
+            case appName = "app_name"
+            case authorizationFingerprint = "auth_fingerprint"
+            case clientSDKVersion = "c_sdk_ver"
+            case clientOS = "client_os"
+            case component = "comp"
+            case deviceManufacturer = "device_manufacturer"
+            case deviceModel = "mobile_device_model"
+            case eventSource = "event_source"
+            case environment = "merchant_sdk_env"
+            case packageManager = "ios_package_manager"
+            case payPalInstalled = "paypal_installed"
+            case productName = "product_name"
+            case integrationType = "api_integration_type"
+            case isSimulator = "is_simulator"
+            case merchantAppVersion = "mapv"
+            case merchantID = "merchant_id"
+            case platform = "platform"
+            case sessionID = "session_id"
+            case spaceKey = "space_key"
+            case tokenizationKey = "tokenization_key"
+            case venmoInstalled = "venmo_installed"
+        }
+    }
+}

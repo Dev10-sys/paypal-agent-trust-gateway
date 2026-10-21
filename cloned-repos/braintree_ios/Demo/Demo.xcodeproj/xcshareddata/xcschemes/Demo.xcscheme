@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme
+   LastUpgradeVersion = "1420"
+   version = "1.3">
+   <BuildAction
+      parallelizeBuildables = "YES"
+      buildImplicitDependencies = "YES">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A0988E4824DB43DC0095EEEE"
+               BuildableName = "Demo.app"
+               BlueprintName = "Demo"
+               ReferencedContainer = "container:Demo.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "045241222EBEBAC100C25EA6"
+               BuildableName = "BraintreeUIComponentsTests.xctest"
+               BlueprintName = "BraintreeUIComponentsTests"
+               ReferencedContainer = "container:../Braintree.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      codeCoverageEnabled = "YES"
+      onlyGenerateCoverageForSpecifiedTargets = "YES">
+      <CodeCoverageTargets>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "0357C47B1F96869600E63851"
+            BuildableName = "BraintreeAmericanExpress.framework"
+            BlueprintName = "BraintreeAmericanExpress"
+            ReferencedContainer = "container:../Braintree.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A7C889731B5EF5DE007A0E9C"
+            BuildableName = "BraintreeApplePay.framework"
+            BlueprintName = "BraintreeApplePay"
+            ReferencedContainer = "container:../Braintree.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A7C8898F1B5F043B007A0E9C"
+            BuildableName = "BraintreeCard.framework"
+            BlueprintName = "BraintreeCard"
+            ReferencedContainer = "container:../Braintree.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "570B936A285397520041BAFE"
+            BuildableName = "BraintreeCore.framework"
+            BlueprintName = "BraintreeCore"
+            ReferencedContainer = "container:../Braintree.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A76D7BFF1BB1CAB00000FA6A"
+            BuildableName = "BraintreeDataCollector.framework"
+            BlueprintName = "BraintreeDataCollector"
+            ReferencedContainer = "container:../Braintree.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "2D941D371B59C76A0016EFB4"
+            BuildableName = "BraintreePayPal.framework"
+            BlueprintName = "BraintreePayPal"
+            ReferencedContainer = "container:../Braintree.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "03502C831E9C0A1700F15EE6"
+            BuildableName = "BraintreeLocalPayment.framework"
+            BlueprintName = "BraintreeLocalPayment"
+            ReferencedContainer = "container:../Braintree.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "BEF3F17227CE9EC600072467"
+            BuildableName = "BraintreeSEPADirectDebit.framework"
+            BlueprintName = "BraintreeSEPADirectDebit"
+            ReferencedContainer = "container:../Braintree.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A91E1EAA24FEEF21007540E5"
+            BuildableName = "BraintreeThreeDSecure.framework"
+            BlueprintName = "BraintreeThreeDSecure"
+            ReferencedContainer = "container:../Braintree.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A77AA29B1B618C7700217B73"
+            BuildableName = "BraintreeVenmo.framework"
+            BlueprintName = "BraintreeVenmo"
+            ReferencedContainer = "container:../Braintree.xcodeproj">
+         </BuildableReference>
+      </CodeCoverageTargets>
+      <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A9B5ABDD24EB2A2200A4E1C8"
+               BuildableName = "UITests.xctest"
+               BlueprintName = "UITests"
+               ReferencedContainer = "container:Demo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A948D6C524FAB79B00F4F178"
+               BuildableName = "BraintreeAmericanExpressTests.xctest"
+               BlueprintName = "BraintreeAmericanExpressTests"
+               ReferencedContainer = "container:../Braintree.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A948D6DB24FAC6C000F4F178"
+               BuildableName = "BraintreeApplePayTests.xctest"
+               BlueprintName = "BraintreeApplePayTests"
+               ReferencedContainer = "container:../Braintree.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A95C410724FAEF2100045045"
+               BuildableName = "BraintreeCardTests.xctest"
+               BlueprintName = "BraintreeCardTests"
+               ReferencedContainer = "container:../Braintree.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A9E5C22324FD6D0800EE691F"
+               BuildableName = "BraintreeCoreTests.xctest"
+               BlueprintName = "BraintreeCoreTests"
+               ReferencedContainer = "container:../Braintree.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A9E5C19D24FD5A7C00EE691F"
+               BuildableName = "BraintreeDataCollectorTests.xctest"
+               BlueprintName = "BraintreeDataCollectorTests"
+               ReferencedContainer = "container:../Braintree.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A9E5C1DF24FD665D00EE691F"
+               BuildableName = "BraintreePayPalTests.xctest"
+               BlueprintName = "BraintreePayPalTests"
+               ReferencedContainer = "container:../Braintree.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A91E1E8924FEDD7F007540E5"
+               BuildableName = "BraintreeLocalPaymentTests.xctest"
+               BlueprintName = "BraintreeLocalPaymentTests"
+               ReferencedContainer = "container:../Braintree.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A948D6EF24FAC8F900F4F178"
+               BuildableName = "BraintreeVenmoTests.xctest"
+               BlueprintName = "BraintreeVenmoTests"
+               ReferencedContainer = "container:../Braintree.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A91E1EF124FEF2E3007540E5"
+               BuildableName = "BraintreeThreeDSecureTests.xctest"
+               BlueprintName = "BraintreeThreeDSecureTests"
+               ReferencedContainer = "container:../Braintree.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A7ABD6521B702FD800A1223C"
+               BuildableName = "IntegrationTests.xctest"
+               BlueprintName = "IntegrationTests"
+               ReferencedContainer = "container:../Braintree.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "BE642D8E27D0132A00694A5B"
+               BuildableName = "BraintreeSEPADirectDebitTests.xctest"
+               BlueprintName = "BraintreeSEPADirectDebitTests"
+               ReferencedContainer = "container:../Braintree.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "BECC91782B20DE7C00A2EE42"
+               BuildableName = "BraintreePayPalMessagingTests.xctest"
+               BlueprintName = "BraintreePayPalMessagingTests"
+               ReferencedContainer = "container:../Braintree.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "8046983D2B27C5530090878E"
+               BuildableName = "BraintreeShopperInsightsTests.xctest"
+               BlueprintName = "BraintreeShopperInsightsTests"
+               ReferencedContainer = "container:../Braintree.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
+   </TestAction>
+   <LaunchAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      launchStyle = "0"
+      useCustomWorkingDirectory = "NO"
+      ignoresPersistentStateOnLaunch = "NO"
+      debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
+      allowLocationSimulation = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A0988E4824DB43DC0095EEEE"
+            BuildableName = "Demo.app"
+            BlueprintName = "Demo"
+            ReferencedContainer = "container:Demo.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+   </LaunchAction>
+   <ProfileAction
+      buildConfiguration = "Release"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "NO"
+      debugDocumentVersioning = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A0988E4824DB43DC0095EEEE"
+            BuildableName = "Demo.app"
+            BlueprintName = "Demo"
+            ReferencedContainer = "container:Demo.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+   </ProfileAction>
+   <AnalyzeAction
+      buildConfiguration = "Debug">
+   </AnalyzeAction>
+   <ArchiveAction
+      buildConfiguration = "Release"
+      revealArchiveInOrganizer = "YES">
+   </ArchiveAction>
+</Scheme>

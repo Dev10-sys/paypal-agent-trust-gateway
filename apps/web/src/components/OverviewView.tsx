@@ -1,5 +1,17 @@
 import React from 'react';
-import { Shield, ArrowRight, Zap, CheckCircle, AlertTriangle, RefreshCw, Terminal, Layers } from 'lucide-react';
+import {
+  Shield,
+  ArrowRight,
+  Zap,
+  CheckCircle,
+  AlertTriangle,
+  RefreshCw,
+  Terminal,
+  Layers,
+  GitBranch,
+  FolderGit2,
+  Lock,
+} from 'lucide-react';
 import { PurchaseProposal } from '@paypal-gateway/shared';
 
 interface OverviewViewProps {
@@ -15,168 +27,213 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
   onSelectOperation,
   onRefresh,
 }) => {
-  const approvedCount = operations.filter((o) => o.state === 'CAPTURED' || o.state === 'BUYER_APPROVED' || o.state === 'ORDER_CREATED').length;
+  const approvedCount = operations.filter(
+    (o) => o.state === 'CAPTURED' || o.state === 'BUYER_APPROVED' || o.state === 'ORDER_CREATED'
+  ).length;
   const deniedCount = operations.filter((o) => o.state === 'DENIED').length;
 
   return (
-    <div className="space-y-8">
-      {/* Hero Banner with Problem Statement */}
-      <div className="glass-panel p-8 rounded-2xl relative overflow-hidden border-cyan-500/20 bg-gradient-to-br from-slate-900/90 via-[#071328]/80 to-slate-900/90">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#0070ba]/10 rounded-full blur-3xl pointer-events-none" />
-        
+    <div className="space-y-6">
+      {/* Hero Banner with PayPal Professional Brand Styling */}
+      <div className="glass-panel p-8 rounded-2xl relative overflow-hidden bg-gradient-to-r from-[#001C3D] via-[#0A2552] to-[#001C3D] border-[#1E2E50]">
         <div className="max-w-3xl space-y-4 relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-cyan-400 text-xs font-semibold">
-            <Shield className="w-3.5 h-3.5" />
-            <span>Developer Trust & Security Layer</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#003087] text-[#FFC439] text-xs font-bold border border-[#004B99]">
+            <Lock className="w-3.5 h-3.5 text-[#FFC439]" />
+            <span>PayPal Sandbox Guarded Gateway</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Guarded AI Payments & PayPal Integration Auditor
+            Developer Trust Gateway for PayPal AI Agents
           </h1>
 
-          <blockquote className="p-4 rounded-xl bg-black/40 border-l-4 border-cyan-400 text-slate-300 text-sm italic leading-relaxed">
-            “AI-assisted payment integrations combine agent tool access, merchant-side transaction limits, buyer approval, idempotent API calls, webhook processing, and dependency integrity. Developers must compose those controls across SDKs and services. PayPal Agent Trust Gateway makes those decisions visible, enforces merchant policy before an API call, and proves the approved flow in PayPal Sandbox.”
-          </blockquote>
+          <p className="text-sm text-slate-300 leading-relaxed">
+            AI-assisted payment integrations combine agent tool access, merchant policy limits, buyer approval, 
+            idempotent API calls, and dependency integrity. This gateway enforces deterministic merchant policy 
+            before calling PayPal Sandbox, checks exact code paths across official PayPal repositories, and prevents unauthorized captures.
+          </p>
 
-          <div className="flex flex-wrap gap-4 pt-2">
+          <div className="flex flex-wrap gap-3 pt-2">
             <button
               onClick={() => onSelectTab('new-request')}
-              className="btn btn-primary"
+              className="btn btn-paypal text-sm font-bold flex items-center gap-2"
             >
-              <Zap className="w-4 h-4" />
-              <span>Propose Guarded Purchase</span>
+              <Zap className="w-4 h-4 text-[#003087]" />
+              <span>New Guarded Purchase</span>
             </button>
             <button
               onClick={() => onSelectTab('audit')}
-              className="btn btn-secondary"
+              className="btn btn-secondary text-sm flex items-center gap-2"
             >
-              <Terminal className="w-4 h-4" />
-              <span>Audit Integration Repo</span>
+              <FolderGit2 className="w-4 h-4 text-[#38BDF8]" />
+              <span>Audit Real Cloned PayPal Repos</span>
             </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Real Cloned Repositories Section */}
+      <div className="glass-panel p-5 rounded-xl border-[#1E2E50] space-y-3">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+            <FolderGit2 className="w-4 h-4 text-[#38BDF8]" />
+            <span>Target Official PayPal Repositories (Cloned & Available)</span>
+          </span>
+          <span className="text-xs text-[#38BDF8] font-mono">3 Repositories Ready</span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div
+            onClick={() => onSelectTab('audit')}
+            className="p-3.5 rounded-lg bg-[#080D1A] border border-[#1E2E50] hover:border-[#0070BA] cursor-pointer transition-colors"
+          >
+            <div className="flex items-center justify-between mb-1">
+              <strong className="text-xs text-white">paypal/agent-toolkit</strong>
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#003087] text-[#FFC439] font-bold">15 Findings</span>
+            </div>
+            <p className="text-[11px] text-slate-400">Official PayPal Agent Toolkit (Python & TS SDKs)</p>
+          </div>
+
+          <div
+            onClick={() => onSelectTab('audit')}
+            className="p-3.5 rounded-lg bg-[#080D1A] border border-[#1E2E50] hover:border-[#0070BA] cursor-pointer transition-colors"
+          >
+            <div className="flex items-center justify-between mb-1">
+              <strong className="text-xs text-white">paypal/paypal-js</strong>
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#0E2A47] text-[#38BDF8] font-bold">SDK Scanned</span>
+            </div>
+            <p className="text-[11px] text-slate-400">Official PayPal JS Client Web SDK</p>
+          </div>
+
+          <div
+            onClick={() => onSelectTab('audit')}
+            className="p-3.5 rounded-lg bg-[#080D1A] border border-[#1E2E50] hover:border-[#0070BA] cursor-pointer transition-colors"
+          >
+            <div className="flex items-center justify-between mb-1">
+              <strong className="text-xs text-white">braintree/braintree_ios</strong>
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-bold">iOS Scanned</span>
+            </div>
+            <p className="text-[11px] text-slate-400">Official PayPal Braintree iOS SDK</p>
           </div>
         </div>
       </div>
 
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="glass-panel p-5 rounded-xl border-white/5">
+        <div className="glass-panel p-5 rounded-xl border-[#1E2E50]">
           <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
             <span>TOTAL LEDGER OPERATIONS</span>
-            <Layers className="w-4 h-4 text-cyan-400" />
+            <Layers className="w-4 h-4 text-[#38BDF8]" />
           </div>
           <div className="text-3xl font-extrabold text-white mt-2">{operations.length}</div>
-          <p className="text-xs text-slate-500 mt-1">Persisted in SQLite local ledger</p>
+          <p className="text-xs text-slate-400 mt-1">Persisted in local SQLite ledger</p>
         </div>
 
-        <div className="glass-panel p-5 rounded-xl border-white/5">
+        <div className="glass-panel p-5 rounded-xl border-[#1E2E50]">
           <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
             <span>POLICY APPROVED / CREATED</span>
             <CheckCircle className="w-4 h-4 text-emerald-400" />
           </div>
           <div className="text-3xl font-extrabold text-emerald-400 mt-2">{approvedCount}</div>
-          <p className="text-xs text-slate-500 mt-1">Passed deterministic merchant rules</p>
+          <p className="text-xs text-slate-400 mt-1">Passed deterministic policy rules</p>
         </div>
 
-        <div className="glass-panel p-5 rounded-xl border-white/5">
+        <div className="glass-panel p-5 rounded-xl border-[#1E2E50]">
           <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
             <span>POLICY DENIED ATTEMPTS</span>
             <AlertTriangle className="w-4 h-4 text-rose-400" />
           </div>
           <div className="text-3xl font-extrabold text-rose-400 mt-2">{deniedCount}</div>
-          <p className="text-xs text-slate-500 mt-1">Over-cap, tamper or unauthorized</p>
+          <p className="text-xs text-slate-400 mt-1">Over-cap or unauthorized</p>
         </div>
 
-        <div className="glass-panel p-5 rounded-xl border-white/5">
+        <div className="glass-panel p-5 rounded-xl border-[#1E2E50]">
           <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
-            <span>SANDBOX ENFORCEMENT</span>
-            <Shield className="w-4 h-4 text-[#00cfde]" />
+            <span>SANDBOX RESTRICTION</span>
+            <Shield className="w-4 h-4 text-[#FFC439]" />
           </div>
-          <div className="text-3xl font-extrabold text-white mt-2">100%</div>
-          <p className="text-xs text-slate-500 mt-1">Production calls strictly blocked</p>
+          <div className="text-3xl font-extrabold text-[#FFC439] mt-2">100%</div>
+          <p className="text-xs text-slate-400 mt-1">Production calls strictly blocked</p>
         </div>
       </div>
 
-      {/* Recent Operations Ledger Table */}
-      <div className="glass-panel rounded-2xl overflow-hidden border-white/10">
-        <div className="p-6 border-b border-white/10 flex items-center justify-between">
+      {/* Operations Ledger Table */}
+      <div className="glass-panel rounded-xl overflow-hidden border-[#1E2E50]">
+        <div className="p-4 border-b border-[#1E2E50] flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-bold text-white">Recent Operations & Idempotency Ledger</h2>
-            <p className="text-xs text-slate-400">
-              Deterministic state progression with unique PayPal request IDs
-            </p>
+            <h3 className="font-bold text-white text-base">Gateway Operations Ledger</h3>
+            <p className="text-xs text-slate-400">Deterministic state audit records with per-call idempotency keys</p>
           </div>
-          <button onClick={onRefresh} className="btn btn-secondary text-xs py-1.5 px-3">
+          <button onClick={onRefresh} className="btn btn-secondary text-xs flex items-center gap-1.5">
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Refresh</span>
           </button>
         </div>
 
-        {operations.length === 0 ? (
-          <div className="p-12 text-center text-slate-400 space-y-3">
-            <p>No operations recorded in ledger yet.</p>
-            <button onClick={() => onSelectTab('new-request')} className="btn btn-primary text-xs">
-              Create First Purchase Proposal
-            </button>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-black/30 text-slate-400 text-xs uppercase font-semibold border-b border-white/5">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-[#080D1A] text-slate-400 uppercase text-[11px] border-b border-[#1E2E50]">
+              <tr>
+                <th className="py-3 px-4">Operation ID</th>
+                <th className="py-3 px-4">Catalog Item</th>
+                <th className="py-3 px-4">Amount</th>
+                <th className="py-3 px-4">State</th>
+                <th className="py-3 px-4">Idempotency Key</th>
+                <th className="py-3 px-4 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#1E2E50]">
+              {operations.length === 0 ? (
                 <tr>
-                  <th className="px-6 py-3">Operation ID</th>
-                  <th className="px-6 py-3">Catalog Item</th>
-                  <th className="px-6 py-3">Amount</th>
-                  <th className="px-6 py-3">State</th>
-                  <th className="px-6 py-3">Create Request ID</th>
-                  <th className="px-6 py-3">Action</th>
+                  <td colSpan={6} className="py-8 text-center text-slate-500">
+                    No operations in ledger yet. Click 'New Guarded Purchase' above.
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                {operations.slice(0, 8).map((op) => {
-                  let stateColor = 'bg-slate-800 text-slate-300';
-                  if (op.state === 'CAPTURED') stateColor = 'bg-emerald-950/80 text-emerald-300 border border-emerald-500/30';
-                  else if (op.state === 'BUYER_APPROVED') stateColor = 'bg-cyan-950/80 text-cyan-300 border border-cyan-500/30';
-                  else if (op.state === 'ORDER_CREATED') stateColor = 'bg-blue-950/80 text-blue-300 border border-blue-500/30';
-                  else if (op.state === 'DENIED') stateColor = 'bg-rose-950/80 text-rose-300 border border-rose-500/30';
-
-                  return (
-                    <tr
-                      key={op.operationId}
-                      className="hover:bg-white/[0.02] cursor-pointer transition-colors"
-                      onClick={() => {
-                        onSelectOperation(op);
-                        onSelectTab('approval-flow');
-                      }}
-                    >
-                      <td className="px-6 py-4 font-mono text-xs text-cyan-400 font-medium">
-                        {op.operationId}
-                      </td>
-                      <td className="px-6 py-4 font-medium text-white">
-                        {op.serverCatalogItem?.name || op.catalogId} (x{op.quantity})
-                      </td>
-                      <td className="px-6 py-4 font-semibold text-white">
-                        {op.currency} {op.totalAmount.toFixed(2)}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${stateColor}`}>
-                          {op.state}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 font-mono text-xs text-slate-400 truncate max-w-xs">
-                        {op.createRequestId}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="text-cyan-400 flex items-center gap-1 text-xs font-semibold hover:underline">
-                          Inspect <ArrowRight className="w-3 h-3" />
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
+              ) : (
+                operations.map((op) => (
+                  <tr key={op.operationId} className="hover:bg-[#121E36] transition-colors">
+                    <td className="py-3 px-4 font-mono font-medium text-[#38BDF8]">
+                      {op.operationId}
+                    </td>
+                    <td className="py-3 px-4 text-slate-200">
+                      {op.serverCatalogItem?.name || op.catalogId} (x{op.quantity})
+                    </td>
+                    <td className="py-3 px-4 font-bold text-white">
+                      ${op.totalAmount.toFixed(2)} {op.currency}
+                    </td>
+                    <td className="py-3 px-4">
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                        op.state === 'CAPTURED'
+                          ? 'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                          : op.state === 'DENIED'
+                          ? 'bg-rose-950 text-rose-300 border border-rose-800'
+                          : op.state === 'BUYER_APPROVED'
+                          ? 'bg-blue-950 text-blue-300 border border-blue-800'
+                          : 'bg-[#003087] text-[#FFC439] border border-[#004B99]'
+                      }`}>
+                        {op.state}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 font-mono text-slate-400 text-[11px] max-w-[180px] truncate">
+                      {op.createRequestId}
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      <button
+                        onClick={() => {
+                          onSelectOperation(op);
+                          onSelectTab('approval-flow');
+                        }}
+                        className="text-[#38BDF8] hover:text-white font-semibold inline-flex items-center gap-1"
+                      >
+                        <span>Manage</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

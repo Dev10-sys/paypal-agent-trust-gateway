@@ -1,0 +1,24 @@
+import { createContext } from "react";
+
+import type {
+  CardFieldsSession,
+  CardFieldsSessionType,
+} from "../components/PayPalCardFieldsProvider";
+
+export interface CardFieldsSessionState {
+  cardFieldsSession: CardFieldsSession | null;
+  setCardFieldsSessionType: (
+    cardFieldsSessionType: CardFieldsSessionType,
+  ) => void;
+  setError: (error: Error | null) => void;
+}
+
+export const CardFieldsSessionContext =
+  createContext<CardFieldsSessionState | null>(null);
+
+export interface CardFieldsStatusState {
+  error: Error | null;
+}
+
+export const CardFieldsStatusContext =
+  createContext<CardFieldsStatusState | null>(null);
