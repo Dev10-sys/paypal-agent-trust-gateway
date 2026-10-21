@@ -1,0 +1,39 @@
+﻿{
+  "_comment": "PayPal Agent Trust Gateway — Sample Merchant Policy Configuration",
+  "_note": "This is a DEMO policy file. In production, load from secure config store, not disk.",
+  
+  "allowedActions": [
+    "orders.create",
+    "orders.capture"
+  ],
+  
+  "maxAmountPerOperation": 500.00,
+  
+  "allowedCurrencies": [
+    "USD",
+    "EUR",
+    "GBP"
+  ],
+  
+  "allowedCatalogIds": [
+    "ads_basic",
+    "ads_pro",
+    "cloud_starter",
+    "ai_credits_micro",
+    "enterprise_addon"
+  ],
+  
+  "enforceSandboxOnly": true,
+  
+  "requireMerchantApproval": true,
+  
+  "_policyVersion": "1.0.0",
+  "_lastUpdated": "2025-01-01",
+  
+  "_security_notes": {
+    "priceAuthority": "SERVER_CATALOG — AI may not propose or override prices",
+    "payeeAuthority": "SERVER — AI may not specify payee or merchant account",
+    "environmentAuthority": "HARDCODED — only PayPal Sandbox, never production",
+    "captureAuthority": "SERVER — capture only after server-verified buyer approval"
+  }
+}

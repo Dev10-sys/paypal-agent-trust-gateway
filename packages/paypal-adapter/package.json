@@ -1,0 +1,19 @@
+{
+  "name": "@paypal-gateway/paypal-adapter",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@paypal/paypal-server-sdk": "^2.5.0",
+    "@paypal-gateway/shared": "workspace:*",
+    "@paypal-gateway/policy": "workspace:*"
+  }
+}

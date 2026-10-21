@@ -1,0 +1,8 @@
+{
+  "name": "@paypal/mcp",
+  "version": "1.8.1",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.6.1",
+    "@paypal/agent-toolkit": "latest"
+  }
+}

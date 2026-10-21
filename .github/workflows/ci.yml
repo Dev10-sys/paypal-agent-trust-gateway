@@ -1,0 +1,111 @@
+﻿name: PayPal Agent Trust Gateway CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test Suite (No Credentials Required)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Type check
+        run: pnpm typecheck
+
+      - name: Unit tests (policy, ledger, state machine, idempotency, redaction)
+        run: pnpm test:unit
+
+      - name: Scanner benchmark fixture tests
+        run: pnpm test:scanner
+
+      - name: Integration flow tests (fake PayPal server)
+        run: pnpm test:integration
+
+      - name: Build all packages
+        run: pnpm build
+
+  scanner-audit:
+    name: Self-Audit Scanner (Scan This Repo)
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build scanner
+        run: pnpm --filter @paypal-gateway/scanner build
+
+      - name: Run integration auditor on fixtures
+        run: node packages/scanner/dist/cli.js fixtures --format sarif > scanner-report.sarif
+
+      - name: Upload SARIF report
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: scanner-report.sarif
+          category: paypal-agent-trust-gateway-scanner
+
+  sandbox-test:
+    name: PayPal Sandbox Integration (Opt-In)
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: sandbox
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm build
+
+      - name: Run Sandbox Tests
+        env:
+          PAYPAL_CLIENT_ID: ${{ secrets.PAYPAL_SANDBOX_CLIENT_ID }}
+          PAYPAL_CLIENT_SECRET: ${{ secrets.PAYPAL_SANDBOX_CLIENT_SECRET }}
+        run: pnpm test:sandbox
+        # Only runs if sandbox secrets are configured in GitHub environment.
+        # Never exposes production credentials. Sandbox-only enforcement is hardcoded.

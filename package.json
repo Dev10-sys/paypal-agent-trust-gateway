@@ -1,0 +1,39 @@
+{
+  "name": "paypal-agent-trust-gateway",
+  "version": "1.0.0",
+  "description": "Deterministic security, policy gate, and audit tool for PayPal AI Agent integrations",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"pnpm --filter @paypal-gateway/api dev\" \"pnpm --filter @paypal-gateway/web dev\"",
+    "build": "pnpm -r run build",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:scanner": "vitest run tests/scanner",
+    "test:integration": "vitest run tests/integration",
+    "test:sandbox": "vitest run tests/sandbox",
+    "scan": "node packages/scanner/dist/cli.js",
+    "typecheck": "tsc -b"
+  },
+  "keywords": [
+    "paypal",
+    "ai-agent",
+    "security-gateway",
+    "idempotency",
+    "trust-gateway"
+  ],
+  "author": "PayPal Agent Trust Gateway Contributors",
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@12.14.0",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "concurrently": "^9.1.2",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.7"
+  }
+}

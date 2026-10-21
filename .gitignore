@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build artifacts
+dist/
+build/
+.cache/
+coverage/
+
+# Environment and local databases
+.env
+*.local
+*.sqlite
+*.sqlite-journal
+*.log
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
