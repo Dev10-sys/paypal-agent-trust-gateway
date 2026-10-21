@@ -1,3 +1,12 @@
+@import "tailwindcss";
+
+.paypal-logo-svg {
+  width: 28px !important;
+  height: 28px !important;
+  display: block;
+  flex-shrink: 0;
+}
+
 :root {
   --bg-primary: #080D1A;
   --bg-secondary: #0E172C;

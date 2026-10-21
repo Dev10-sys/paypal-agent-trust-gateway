@@ -330,7 +330,13 @@ export const PayPalApprovalView: React.FC<PayPalApprovalViewProps> = ({
                     className="btn-paypal w-full flex items-center justify-center gap-2 py-3 text-sm"
                   >
                     {/* PayPal Monogram Logo */}
-                    <svg className="w-5 h-5" viewBox="0 0 100 115" fill="none">
+                    <svg
+                      width="18"
+                      height="20"
+                      style={{ width: 18, height: 20, display: 'inline-block', flexShrink: 0 }}
+                      viewBox="0 0 100 115"
+                      fill="none"
+                    >
                       <path d="M78.6 30.4C76.1 47.1 63.8 55.4 46.5 55.4H35.8L28.1 104.7H10L25.3 6.9H56.5C71.3 6.9 80.5 13.9 78.6 30.4Z" fill="#003087"/>
                       <path d="M89.7 44.5C87.2 61.2 74.9 69.5 57.6 69.5H46.9L40.9 108.1H25.3L37.1 32.7H67.6C82.4 32.7 91.6 39.7 89.7 44.5Z" fill="#0079C1"/>
                     </svg>
@@ -454,7 +460,13 @@ export const PayPalApprovalView: React.FC<PayPalApprovalViewProps> = ({
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b pb-4">
               <div className="flex items-center gap-2">
-                <svg className="w-7 h-7" viewBox="0 0 100 115" fill="none">
+                <svg
+                  width="24"
+                  height="28"
+                  style={{ width: 24, height: 28, display: 'inline-block', flexShrink: 0 }}
+                  viewBox="0 0 100 115"
+                  fill="none"
+                >
                   <path d="M78.6 30.4C76.1 47.1 63.8 55.4 46.5 55.4H35.8L28.1 104.7H10L25.3 6.9H56.5C71.3 6.9 80.5 13.9 78.6 30.4Z" fill="#003087"/>
                   <path d="M89.7 44.5C87.2 61.2 74.9 69.5 57.6 69.5H46.9L40.9 108.1H25.3L37.1 32.7H67.6C82.4 32.7 91.6 39.7 89.7 44.5Z" fill="#0079C1"/>
                 </svg>

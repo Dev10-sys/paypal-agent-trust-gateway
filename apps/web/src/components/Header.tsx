@@ -29,8 +29,16 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Brand */}
         <div className="flex items-center gap-3">
           {/* Authentic PayPal Logo */}
-          <div className="flex items-center justify-center p-2 rounded-xl bg-[#002654] border border-[#003875] shadow-inner">
-            <svg className="w-7 h-7" viewBox="0 0 100 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <div className="flex items-center justify-center p-1 rounded-lg bg-[#002654] border border-[#003875]" style={{ width: 36, height: 36, flexShrink: 0 }}>
+            <svg
+              className="paypal-logo-svg"
+              width="22"
+              height="26"
+              style={{ width: 22, height: 26, display: 'block', flexShrink: 0 }}
+              viewBox="0 0 100 115"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path d="M78.6 30.4C76.1 47.1 63.8 55.4 46.5 55.4H35.8L28.1 104.7H10L25.3 6.9H56.5C71.3 6.9 80.5 13.9 78.6 30.4Z" fill="#003087"/>
               <path d="M89.7 44.5C87.2 61.2 74.9 69.5 57.6 69.5H46.9L40.9 108.1H25.3L37.1 32.7H67.6C82.4 32.7 91.6 39.7 89.7 44.5Z" fill="#0079C1"/>
               <path d="M46.9 69.5L52.8 32.7H37.1L28.1 104.7H41.2L46.9 69.5Z" fill="#00235C" opacity="0.6"/>
