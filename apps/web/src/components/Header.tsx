@@ -16,6 +16,7 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const tabs = [
     { id: 'overview', label: 'Dashboard' },
+    { id: 'demo-store', label: 'PayPal Demo Store' },
     { id: 'new-request', label: 'AI Purchase Request' },
     { id: 'approval-flow', label: 'PayPal Checkout & Capture' },
     { id: 'receipt', label: 'Idempotency & Ledger' },

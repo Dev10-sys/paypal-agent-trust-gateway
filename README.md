@@ -126,6 +126,13 @@ pnpm dev
 - Web Dashboard: `http://localhost:3000`
 - API Health Endpoint: `http://localhost:4000/api/health`
 
+### Interactive Storefront & Agent Demo
+
+The web application includes a live merchant storefront (`Nexus Cloud & AI Services`) accessible via the **PayPal Demo Store** tab:
+- **Direct Checkout**: Official PayPal Smart Buttons with realistic Sandbox checkout modal and buyer approval flow.
+- **Autonomous Agent Scenarios**: 1-click test scenarios demonstrating legitimate agent purchase ($15.00), rogue agent overspend block ($250.00 > $50.00 limit), client price tampering defense, and network retry deduplication.
+- **Live Gateway Telemetry**: Real-time HUD tracing request interception, policy verification, `PayPal-Request-Id` binding, and idempotent capture.
+
 ---
 
 ## Test Suite Execution

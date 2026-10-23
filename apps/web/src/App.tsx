@@ -6,6 +6,7 @@ import { PayPalApprovalView } from './components/PayPalApprovalView';
 import { OperationReceiptView } from './components/OperationReceiptView';
 import { RepositoryAuditView } from './components/RepositoryAuditView';
 import { SupplyChainView } from './components/SupplyChainView';
+import { DemoStorefrontView } from './components/DemoStorefrontView';
 import { CatalogItem, PurchaseProposal } from '@paypal-gateway/shared';
 
 export const App: React.FC = () => {
@@ -89,6 +90,15 @@ export const App: React.FC = () => {
             onSelectTab={setActiveTab}
             onSelectOperation={(op) => setSelectedOperation(op)}
             onRefresh={fetchOperations}
+          />
+        )}
+
+        {activeTab === 'demo-store' && (
+          <DemoStorefrontView
+            catalog={catalog}
+            onProposalCreated={handleProposalCreated}
+            onSelectTab={setActiveTab}
+            onSelectOperation={(op) => setSelectedOperation(op)}
           />
         )}
 
