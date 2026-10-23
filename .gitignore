@@ -13,6 +13,9 @@ coverage/
 *.local
 *.sqlite
 *.sqlite-journal
+*.db
+*.db-journal
+apps/api/data/
 *.log
 
 # IDE & OS
